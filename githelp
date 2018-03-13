@@ -1,4 +1,5 @@
-t
+# just a list of commands to help me remember the command line interface through examples... 
+
 git add README.md
 git commit -m "first commit"
 git remote add origin https://github.com/edwardspbe/ProjectOllie.git
