@@ -5,6 +5,7 @@
 #
 
 cp ./backup ~/ProjectOllie/webapp/ 
+cp ./restore ~/ProjectOllie/webapp/ 
 cp ./ProjectOllie/robots.txt ~/ProjectOllie/webapp/ProjectOllie 
 cp ./ProjectOllie/models.py ~/ProjectOllie/webapp/ProjectOllie 
 cp ./ProjectOllie/tests.py ~/ProjectOllie/webapp/ProjectOllie 
