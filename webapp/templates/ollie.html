@@ -1,0 +1,20 @@
+{% extends "admin/base_site.html" %}
+{% load admin_modify admin_list i18n %}
+
+{% block extrahead %}
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="/static/js/core.js"></script>
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery.init.js"></script>
+<script type="text/javascript" src="/static/js/inlines.min.js"></script>
+<script type="text/javascript" src="/static/js/actions.min.js"></script>
+<script type="text/javascript" src="/static/js/collapse.min.js"></script>
+
+{% endblock %}
+
+{% csrf_token %}
+{% block content %}
+<h1 style="color:#7CA0C7">Project Ollie</h1>
+<p>Welcome</p>
+{% endblock %}
