@@ -1,4 +1,5 @@
-# ![ProjectOllie](https://github.com/edwardspbe/ProjectOllie/blob/master/banner.jpg)
+# ProjectOllie
+![ProjectOllie](https://github.com/edwardspbe/ProjectOllie/blob/master/banner.jpg)
 
 Sandy Beach at Otter Lake infrastructure management app and other tools
 
