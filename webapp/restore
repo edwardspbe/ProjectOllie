@@ -1,0 +1,36 @@
+#!/bin/bash -x
+#
+# Function: simple bash script to restore a backup copy of the ProjectOllie web application
+#           to the preferred install area
+#
+
+if [ "$LOCATION" == "" ]
+then
+	echo "Aborting: need to set the web install location before restoring..."
+	echo "    example: export LOCATION=\"/var/www/ProjectOllie\""
+	exit 1
+fi
+
+if [ ! -d $LOCATION ] ; then mkdir $LOCATION; fi
+cp restore $LOCATION/restore
+cp backup  $LOCATION/backup 
+if [ ! -d $LOCATION ] ; then mkdir $LOCATION/ProjectOllie; fi
+cp ProjectOllie/robots.txt  $LOCATION/ProjectOllie/robots.txt 
+cp ProjectOllie/models.py  $LOCATION/ProjectOllie/models.py 
+cp ProjectOllie/tests.py  $LOCATION/ProjectOllie/tests.py 
+cp ProjectOllie/favicon.ico  $LOCATION/ProjectOllie/favicon.ico 
+cp ProjectOllie/apps.py  $LOCATION/ProjectOllie/apps.py 
+cp ProjectOllie/views.py  $LOCATION/ProjectOllie/views.py 
+cp ProjectOllie/admin.py  $LOCATION/ProjectOllie/admin.py 
+cp wsgi.py  $LOCATION/wsgi.py 
+cp settings.py  $LOCATION/settings.py 
+cp urls.py  $LOCATION/urls.py 
+cp favicon.ico  $LOCATION/favicon.ico 
+cp db.sqlite3  $LOCATION/db.sqlite3 
+if [ ! -d $LOCATION ] ; then mkdir $LOCATION/templates; fi
+cp templates/ollie.html  $LOCATION/templates/ollie.html 
+cp favicon.jpg  $LOCATION/favicon.jpg 
+cp banner.jpg  $LOCATION/banner.jpg 
+if [ ! -d $LOCATION ] ; then mkdir $LOCATION/apache; fi
+cp apache/apache_django_wsgi.conf  $LOCATION/apache/apache_django_wsgi.conf 
+cp manage.py  $LOCATION/manage.py 
