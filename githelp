@@ -1,0 +1,28 @@
+t
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/edwardspbe/ProjectOllie.git
+git config git config --global user.email "paul.e@rogers.com"
+git config --global user.email "paul.e@rogers.com"
+git config --global user.email
+git commit -m "first commit"
+git push -u origin master
+git add .
+
+#configure user name
+git config user.name
+git remote -v
+
+#NOTE: ssh keys are required.  these are stored in a locked
+#configure ssh location
+git remote set-url origin git@github.com:edwardspbe/ProjectOllie.git
+
+#adding files or . (for all new files)
+git add banner.jpg 
+git add .
+
+#commit additions and changes
+git commit -m "adding banner.jpg"
+
+#push commitments to the git server
+git push
