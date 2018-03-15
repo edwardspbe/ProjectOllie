@@ -90,6 +90,8 @@ def main():
   try:
     timestamp = None
     logging.basicConfig(format='%(asctime)s %(message)s', filename='ss_not.log', level=logging.INFO)
+    with open('ollie_at_your_service.conf') as json_data_file:
+        confdata = json.load(json_data_file)
 
     while True :
         #wait for input from button...
@@ -112,11 +114,12 @@ def main():
                         GPIO.cleanup()
                         continue
                         
-                logging.info("service requested..  sending SMS.")
-                answer = requests.post('https://textbelt.com/text', {
-                                       'phone': '6132408250',
-                                       'message': 'Hello from Ollie',
-                                       'key': 'textbelt',
+                logging.info("service requested..  sending SMS to %s." % confdata['numbers'])
+                for name in confdata['numbers'] :
+                    answer = requests.post('https://textbelt.com/text', {
+                                           'phone': confdata['numbers'][name],
+                                           'message': 'Ollie needs help at the Snack Shack',
+                                           'key': confdata['TextBelt']['key'],
                 })
                 obj = json.loads(answer.content)
                 if obj['success'] == True :
