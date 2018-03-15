@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Name:        ss_note.py
+# Name:        ollie_at_your_service.py
 # Purpose      Snack Shack notifications python module for automating snack shack.
 #
 # Author:      paul.e@rogers.com
