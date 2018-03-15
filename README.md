@@ -7,5 +7,7 @@ Sandy Beach at Otter Lake infrastructure management app and other tools
 
 The following is a suite tools and applications used within the park to help share information, automate task, monitor activities and, well, whatever...
 
-There is nothing here considered proprietary or private.  Git simply provides a great place to store/backup/share the code used.  Thanks GitHub!
+There is nothing here considered proprietary or private.  Git simply provides a great place to store/backup/share the code used.  Thanks GitHub!  :+1:
+
+BTW/ Ollie is our mascotte.  :smile:
 
