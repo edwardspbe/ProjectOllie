@@ -120,15 +120,16 @@ def main():
                                            'phone': confdata['numbers'][name],
                                            'message': 'Ollie needs help at the Snack Shack',
                                            'key': confdata['TextBelt']['key'],
-                })
-                obj = json.loads(answer.content)
-                if obj['success'] == True :
-                    logging.info("SMS Send Successful!")
-                    do_blink_loop(working)
-                    timestamp = datetime.now()
-                else :
-                    logging.info("SMS SEND ERROR: [%s]" % obj['error'])
-                    do_blink_loop(errorstate)
+                    })
+                    obj = json.loads(answer.content)
+                    if obj['success'] == True :
+                        logging.info("SMS Send Successful!")
+                        do_blink_loop(working)
+                        timestamp = datetime.now()
+                    else :
+                        logging.info("SMS SEND ERROR: [%s]" % obj['error'])
+                        do_blink_loop(errorstate)
+                        break
             #this is important in case someone is pushing the button non-stop
             GPIO.cleanup()
 

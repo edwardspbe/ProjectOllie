@@ -17,9 +17,9 @@ from django.conf.urls import url
 from django.contrib import admin
 from ProjectOllie import views
 
-admin.site.site_header = 'Project Ollie'
-admin.site.index_title = 'Project Ollie User Adninistration'
-admin.site.site_title = 'Project Ollie'
+admin.site.site_header = 'Sandy Beach at Otter Lake Intranet'
+admin.site.index_title = 'Sandy Beach at Otter Lake Intranet Administration'
+admin.site.site_title = 'Sandy Beach at Otter Lake'
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

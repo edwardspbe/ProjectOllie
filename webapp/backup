@@ -5,7 +5,6 @@
 #
 
 cp ./backup ~/ProjectOllie/webapp/ 
-cp ./restore ~/ProjectOllie/webapp/ 
 cp ./ProjectOllie/robots.txt ~/ProjectOllie/webapp/ProjectOllie 
 cp ./ProjectOllie/models.py ~/ProjectOllie/webapp/ProjectOllie 
 cp ./ProjectOllie/tests.py ~/ProjectOllie/webapp/ProjectOllie 
@@ -18,8 +17,8 @@ cp ./settings.py ~/ProjectOllie/webapp/
 cp ./urls.py ~/ProjectOllie/webapp/ 
 cp ./favicon.ico ~/ProjectOllie/webapp/ 
 cp ./db.sqlite3 ~/ProjectOllie/webapp/ 
+cp ./templates/base.html ~/ProjectOllie/webapp/templates/ 
 cp ./templates/ollie.html ~/ProjectOllie/webapp/templates/ 
 cp ./favicon.jpg ~/ProjectOllie/webapp/ 
-cp ./banner.jpg ~/ProjectOllie/webapp/ 
 cp ./apache/apache_django_wsgi.conf ~/ProjectOllie/webapp/apache/ 
 cp ./manage.py ~/ProjectOllie/webapp/ 
