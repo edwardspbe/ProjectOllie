@@ -131,4 +131,5 @@ STATIC_ROOT = '/var/www/static'
 DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
 
 LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/admin/login/'

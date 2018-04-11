@@ -1,0 +1,19 @@
+#!/bin/bash -x 
+
+include /opt/ollie/conf/config
+
+ping -c1 google.ca
+if [ $? -eq 0 ] 
+then
+    #all is find, we can speak to the Internet.
+    echo 1 > /var/run/ollie/internet
+else
+    #hmmm, cannot see the Internet, let's try our home server
+    ping -c1 $gateway
+    if [ $? -ne 0 ] 
+    then
+        #our network connection must be down, reload the network
+        /etc/init.d/network restart
+    fi
+fi
+ 

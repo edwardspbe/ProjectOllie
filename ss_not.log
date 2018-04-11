@@ -1,0 +1,10 @@
+2018-03-15 21:24:01,349 service requested..  sending SMS to {u'paul': u'6132408250'}.
+2018-03-15 21:24:05,304 SMS Send Successful!
+2018-03-15 21:24:52,769 service request while in WAIT-PERIOD.
+2018-03-16 19:53:34,461 service requested..  sending SMS to {u'paul': u'6132408250'}.
+2018-03-16 19:53:36,021 SMS Send Successful!
+2018-03-16 19:53:54,392 service request while in WAIT-PERIOD.
+2018-03-16 19:54:05,529 service request while in WAIT-PERIOD.
+2018-03-17 12:42:33,618 service requested..  sending SMS to {u'paule': u'6132408250', u'pauld': u'6133257047'}.
+2018-03-17 12:42:35,292 SMS Send Successful!
+2018-03-17 12:42:50,286 SMS Send Successful!

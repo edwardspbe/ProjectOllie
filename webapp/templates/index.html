@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="well">
+  <h1 style="color: #337ab7;">Sandy Beach Intranet</h1>
+    {% csrf_token %}
+    {% if user.is_authenticated %}
+        <p>Welcome {{ user.first_name }}.</p>
+    {% else %}
+    <p>Welcome guest.</p>
+    <p>As a guest of Otter Lake at Sandy Beach you can browse information about our park here.  
+    To use this sites full features, please send an email request to admin@sandybeachatotterlake.com 
+    so that we can register you as a user.</p>  
+    <p>If you are already a registered user, please <a href="/login">log in</a> to continue.</p>
+    <p>Best regards</p>
+    {% endif %}
+</div>    
+{% endblock %}

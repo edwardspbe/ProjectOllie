@@ -12,13 +12,25 @@ cp ./ProjectOllie/favicon.ico ~/ProjectOllie/webapp/ProjectOllie
 cp ./ProjectOllie/apps.py ~/ProjectOllie/webapp/ProjectOllie 
 cp ./ProjectOllie/views.py ~/ProjectOllie/webapp/ProjectOllie 
 cp ./ProjectOllie/admin.py ~/ProjectOllie/webapp/ProjectOllie 
+cp ./ProjectOllie/forms.py ~/ProjectOllie/webapp/ProjectOllie
 cp ./wsgi.py ~/ProjectOllie/webapp/
 cp ./settings.py ~/ProjectOllie/webapp/ 
 cp ./urls.py ~/ProjectOllie/webapp/ 
 cp ./favicon.ico ~/ProjectOllie/webapp/ 
 cp ./db.sqlite3 ~/ProjectOllie/webapp/ 
 cp ./templates/base.html ~/ProjectOllie/webapp/templates/ 
-cp ./templates/ollie.html ~/ProjectOllie/webapp/templates/ 
-cp ./favicon.jpg ~/ProjectOllie/webapp/ 
+cp ./templates/profile.html ~/ProjectOllie/webapp/templates/
+cp ./templates/400.html ~/ProjectOllie/webapp/templates/
+cp ./templates/admin/login.html ~/ProjectOllie/webapp/templates/
+cp ./templates/admin/base_site.html ~/ProjectOllie/webapp/templates/
+cp ./templates/base.html ~/ProjectOllie/webapp/templates/
+cp ./templates/index.html ~/ProjectOllie/webapp/templates/
 cp ./apache/apache_django_wsgi.conf ~/ProjectOllie/webapp/apache/ 
 cp ./manage.py ~/ProjectOllie/webapp/ 
+
+cp ../static/css/ollie.css ~/ProjectOllie/webapp/static
+cp ../static/admin/css/login.css ~/ProjectOllie/webapp/static
+cp ../static/admin/css/base.css ~/ProjectOllie/webapp/static
+cp ../static/img/stop.jpg ~/ProjectOllie/webapp/static
+cp ../static/img/favicon.jpg ~/ProjectOllie/webapp/static
+cp ../static/img/banner.jpg ~/ProjectOllie/webapp/static

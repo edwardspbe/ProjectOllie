@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script language="JavaScript" type="text/javascript">
+$( document ).ready(function() {
+    setTimeout(function() {
+        window.location.href = "/"
+    }, 5000);	
+});
+</script>
+
+    <h1>Unexpected Error!</h1>
+    <img width="50%" src="/static/img/stop.jpg">
+    <p>This may happen because of the following reasons;</p>
+    <ul>
+        <li>You are visiting a page, but are not logged in.</li>
+        <li>You have tried to visit a page that does not exist.</li>
+        <li>There has been an error submitting data with your request.</li>
+        <li>You have attempted to perform a function without the required permissions.</li>
+    </ul>
+    <p>You will automatically be redirected in 5 seconds.  To redirect <a href="/">click here</a></p>
+{% endblock %}
+    

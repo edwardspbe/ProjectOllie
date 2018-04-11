@@ -1,0 +1,91 @@
+{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/ollie.css" />
+    {% block extrastyle %}{% endblock %}
+    {% block extrahead %}
+        <script src="/static/js/jquery.min.js"></script>
+        <script src="/static/js/ie-emulation-modes-warning.js"></script>
+        <script src="/static/js/tether.min.js"></script>
+        <script src="/static/js/popper.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+    {% endblock %}
+    <meta name="robots" content="NONE,NOARCHIVE" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="SandyBeachatOtterLakeIntranetPages">
+    <meta name="author" content="paul.e@rogers.com">
+    <link rel="icon" href="/static/img/favicon.ico">
+</head>
+<body>
+  <div class="container-fluid">
+    <nav class="navbar navbar-light ollienav"> 
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" 
+		  aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand olliebrand" href="/">Sandy Beach at Otter Lake</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right olliebrand">
+            {% if user.is_authenticated %}
+              <li class="dropdown">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+                            aria-expanded="false">{{ user.first_name }}<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/profile/">My Profile</a></li>
+		  {% if user.is_staff %}
+                     <li><a href="/admin">Site Admin</a></li>
+                     <li><a href="/notices">Notices</a></li>
+		  {% endif %}
+                  <li><a href="/admin/logout">Log out</a></li>
+                </ul>
+              </li>
+	    {% else %}
+	      <li><a href="/login">Login</a></li>
+	    {% endif %}
+          </ul>
+        </div><!--/.nav-collapse -->
+    </nav>
+	<nav class="nav-sidebar col-md-3 col-xs-3 ollieindex"> 
+        <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="home"></span>
+                  Home <span class="sr-only"></span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/">
+                  <span data-feather="file"></span>
+                  Services
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/">
+                  <span data-feather="shopping-cart"></span>
+                  Trailers
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/">
+                  <span data-feather="shopping-cart"></span>
+                  Cabins
+                </a>
+              </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main role="main" class="col-md-9 col-xs-9 ml-xs-auto olliemain">
+        {% block content %} {% endblock %} 
+    </main>
+  </div> <!-- container-fluid-->
+  <span class="align-bottom small">&copy; 2018, Sandy Beach at Otter Lake</span>
+</body>
+</html>
