@@ -1,0 +1,35 @@
+body {
+    margin: 3%;
+    background-color: rgba(255, 255, 255, 0.93);
+    font-family: Verdana, sans-serif;
+}
+
+.olliebrand {
+    text-shadow: 1px 1px #000;
+    color: #f5dd5d;
+}
+
+.ollienav {
+	border:2px solid grey; 
+	margin-bottom: 0px; 
+	background-color: #73a6ff;
+}
+
+.ollieindex {
+	border:2px solid grey; 
+	margin-bottom: 0px;
+    min-height:500px;
+    max-height:500px;
+}
+
+.olliemain {
+	border:2px solid grey; 
+    display:block; 
+    box-sizing: border-box; /* css3 rec */
+    -moz-box-sizing: border-box; /* ff2 */
+    -ms-box-sizing: border-box; /* ie8 */
+    -webkit-box-sizing: border-box; /* safari3 */
+    -khtml-box-sizing: border-box; /* konqueror */
+    min-height:500px;
+    max-height:500px;
+}
