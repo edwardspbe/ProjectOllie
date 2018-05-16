@@ -22,10 +22,16 @@ cp ./db.sqlite3 ~/ProjectOllie/webapp/
 cp ./templates/base.html ~/ProjectOllie/webapp/templates/ 
 cp ./templates/profile.html ~/ProjectOllie/webapp/templates/
 cp ./templates/400.html ~/ProjectOllie/webapp/templates/
-cp ./templates/admin/login.html ~/ProjectOllie/webapp/templates/
-cp ./templates/admin/base_site.html ~/ProjectOllie/webapp/templates/
-cp ./templates/base.html ~/ProjectOllie/webapp/templates/
+cp ./templates/admin/login.html ~/ProjectOllie/webapp/templates/admin
+cp ./templates/admin/base_site.html ~/ProjectOllie/webapp/templates/admin
 cp ./templates/index.html ~/ProjectOllie/webapp/templates/
+cp ./templates/cottages.html ~/ProjectOllie/webapp/templates/
+cp ./templates/dashboard_example.html ~/ProjectOllie/webapp/templates/
+cp ./templates/notifications.html ~/ProjectOllie/webapp/templates/
+cp ./templates/park_status.html ~/ProjectOllie/webapp/templates/
+cp ./templates/services.html ~/ProjectOllie/webapp/templates/
+cp ./templates/support.html ~/ProjectOllie/webapp/templates/
+cp ./templates/trailers.html ~/ProjectOllie/webapp/templates/
 cp ./apache/apache_django_wsgi.conf ~/ProjectOllie/webapp/apache/ 
 cp ./manage.py ~/ProjectOllie/webapp/ 
 

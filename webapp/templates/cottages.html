@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% block extrahead %}
+<link rel="stylesheet" href="/static/css/sbaol.css">
+<style>
+label {
+    color: #4169e1;
+}
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="well">
+  {% csrf_token %}
+    <!-- business card start -->
+    <div class="pull-right text-center" style="width:300px;">
+      <div style="margin: 20px; padding: 5px; border: 1px solid black;">
+          Please contact us<br>about availability.<br><a href="tel:1-613-283-2080">1-613-283-2080</a><br>
+          <a href="mailto:admin@sandybeachatotterlake.com"><font size="-1">admin@sandybeachatotterlake.com</font></a>
+      </div>
+    </div>
+    <!-- business card end -->
+    <h1>Our Cabins</h1>
+    <p>All cabins have been meticulously maintained over the years and offer the comfort and capacity to host small family vacations or entire family reunions. The cabins are nestled under mature pine and maple trees providing ample shade for those warm summer days. The vast majority of our beds have been upgraded from double to new queen beds this year.  We offer a snack bar (Ollies Snack Shack) where you can buy a variety of items from ice cream to firewood.  All larger cabins have their own bathroom and shower facilities, however, there is also a common bathhouse for the cabins without these facilities. All cabins are within one hundred yards of the beach and include a small deck and fire-pit for campfires. </p>
+    <p><font style="color: #4169e1; font-style: italic;">Please note:</font> Our minimum rental period in non-prime season is two days. Our minimum rental period in prime season is 7 days. Depending on size, facilities and the season, weekly cabin prices range from $360 - $1600 per week.  BBQ rental and water cooler refills also available.</p>
+    <hr>
+    <h2>Premier Cabins</h2>
+    <hr>
+    <div class="row">
+      <div class="col-md-4 pull-left">
+	      <div class="columnhead"><img width="90%" src="/static/images/cabins/bh1.JPG" onclick="openModal(1,1)"></div>
+      </div>
+      <div class="col-md-7 pull-right"><label>Beach House</label>
+	      <div class="columntext"><p>Newly renovated four bedrooms with large bathroom, large open concept kitchen/entertaining room and deck directly overlooking the beach. </p></div>
+         <div class="columndata"><img src="/static/images/thumbnails/bh1.JPG" style="width:100%" onclick="openModal(1,1)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/bh1-1.JPG" style="width:100%" onclick="openModal(1,2)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/bh1-2.JPG" style="width:100%" onclick="openModal(1,3)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/bh1-3.JPG" style="width:100%" onclick="openModal(1,4)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/bh1-4.JPG" style="width:100%" onclick="openModal(1,5)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/bh1-5.JPG" style="width:100%" onclick="openModal(1,6)" class="hover-shadow cursor"></div>
+      </div>  
+    </div>      
+    <hr>
+    <div class="row">
+      <div class="col-md-4 pull-left">
+	     <div class="columnhead"><img width="90%" src="/static/images/cabins/bh2.JPG" onclick="openModal(2,1)"></div>
+      </div>
+      <div class="col-md-7 pull-right"><label>Beach Suite</label>
+	    <div class="columntext"><p>Newly renovated, roomy two bedroom, with bathroom, kitchen, sitting area and a deck overlooking the beach.</p></div>
+         <div class="columndata"><img src="/static/images/thumbnails/bh2-1.JPG" style="width:100%" onclick="openModal(2,1)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/bh2-2.JPG" style="width:100%" onclick="openModal(2,2)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/bh2-3.JPG" style="width:100%" onclick="openModal(2,3)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/bh2-4.JPG" style="width:100%" onclick="openModal(2,4)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/bh2-6.JPG" style="width:100%" onclick="openModal(2,5)" class="hover-shadow cursor"></div>
+      </div>  
+    </div>  
+    <hr>
+    <div class="row">
+      <div class="col-md-4 pull-left">
+        <div class="columnhead"><img width="90%" src="/static/images/cabins/26.JPG" onclick="openModal(5,1)"></div>
+        </div>
+      <div class="col-md-7 pull-right"><label>Sunset</label>
+    <div class="columntext"><p>Three bedroom, with large kitchen and living room area, bathroom and a large private deck overlooking the lake.  This cabin has the perfect view of the sunset.</p></div>
+         <div class="columndata"><img src="/static/images/thumbnails/26.JPG" style="width:100%" onclick="openModal(5,1)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/26-1.JPG" style="width:100%" onclick="openModal(5,2)" class="hover-shadow cursor"></div>
+      </div>  
+    </div>  
+    <hr>
+    <div class="row">
+      <div class="col-md-4 pull-left">
+        <div class="columnhead"><img width="90%" src="/static/images/cabins/25.JPG" onclick="openModal(4,1)"></div>
+        </div>
+      <div class="col-md-7 pull-right"><label>Hilltop</label>
+    <div class="columntext"><p>Three bedroom, with large kitchen and living room area, bathroom and a large deck overlooking the park.</p></div>
+         <div class="columndata"><img src="/static/images/thumbnails/25.JPG" style="width:100%" onclick="openModal(4,1)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/25-1.JPG" style="width:100%" onclick="openModal(4,2)" class="hover-shadow cursor"></div>
+      </div>  
+    </div>  
+    <hr>
+    <h2>Superior Cabins</h2>
+    <hr>
+    <div class="row">
+      <div class="col-md-4 pull-left">
+        <div class="columnhead"><img width="90%" src="/static/images/cabins/19-1.JPG" onclick="openModal(6,1)"></div>
+      </div>
+      <div class="col-md-7 pull-right"><label>Cedar Cove</label>
+        <div class="columntext"><p>Newly renovated two bedroom with bathroom, kitchen and large deck over looking the beach. </p></div>
+         <div class="columndata"><img src="/static/images/thumbnails/19-1.JPG" style="width:100%" onclick="openModal(6,1)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/19-2.JPG" style="width:100%" onclick="openModal(6,2)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/19-3.JPG" style="width:100%" onclick="openModal(6,3)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/19-4.JPG" style="width:100%" onclick="openModal(6,4)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/19-5.JPG" style="width:100%" onclick="openModal(6,5)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/19-6.JPG" style="width:100%" onclick="openModal(6,6)" class="hover-shadow cursor"></div>
+      </div>  
+    </div>      
+    <hr>
+    <h2>Standard Cabins</h2>
+    <hr>
+    <div class="row">
+      <div class="col-md-4 pull-left">
+        <div class="columnhead"><img width="90%" src="/static/images/cabins/5.JPG" onclick="openModal(3,1)"></div>
+        </div>
+      <div class="col-md-7 pull-right"><label>Knotty Spruce</label>
+    <div class="columntext"><p>Two bedroom, with large kitchen, bathroom, outdoor shower and a large deck nestled under huge pine trees.</p></div>
+         <div class="columndata"><img src="/static/images/thumbnails/5-1.JPG" style="width:100%" onclick="openModal(3,1)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/5-2.JPG" style="width:100%" onclick="openModal(3,2)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/5-3.JPG" style="width:100%" onclick="openModal(3,3)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/5-4.JPG" style="width:100%" onclick="openModal(3,4)" class="hover-shadow cursor"></div>
+      </div>  
+    </div>  
+    <hr>
+    <h2>Our Glampers</h2>
+    <hr>
+    <div class="row">
+      <div class="col-md-4 pull-left">
+        <div class="columnhead"><img width="90%" src="/static/images/cabins/g9.JPG" onclick="openModal(7,1)"></div>
+        </div>
+      <div class="col-md-7 pull-right"><label></label>
+    <div class="columntext"><p>Our glampers are 1 room cabins furnished with a queen sized bed, dresser and small table with chairs and a deck with a great view of the park. This is the most glamorous tent you will ever stay in!</p></div>
+         <div class="columndata"><img src="/static/images/thumbnails/g9.JPG" style="width:100%" onclick="openModal(7,1)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/g9-1.JPG" style="width:100%" onclick="openModal(7,2)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/g9-2.JPG" style="width:100%" onclick="openModal(7,3)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/g1.JPG" style="width:100%" onclick="openModal(7,4)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/g5.JPG" style="width:100%" onclick="openModal(7,5)" class="hover-shadow cursor"></div>
+         <div class="columndata"><img src="/static/images/thumbnails/g24.JPG" style="width:100%" onclick="openModal(7,6)" class="hover-shadow cursor"></div>
+      </div>  
+    </div>  
+    <hr>
+  </div><!-- intro -->
+</div><!-- container -->
+<div id="m1" class="modal">
+    <span class="close cursor" onclick="closeModal('m1')">&times;</span>
+    <div class="modal-content">
+        <div class="mySlides ms1"><div class="numbertext">1 / 6</div><img src="/static/images/cabins/bh1.JPG" style="width:100%"></div>
+        <div class="mySlides ms1"><div class="numbertext">2 / 6</div><img src="/static/images/cabins/bh1-1.JPG" style="width:100%"></div>
+        <div class="mySlides ms1"><div class="numbertext">3 / 6</div><img src="/static/images/cabins/bh1-2.JPG" style="width:100%"></div>
+        <div class="mySlides ms1"><div class="numbertext">4 / 6</div><img src="/static/images/cabins/bh1-3.JPG" style="width:100%"></div>
+        <div class="mySlides ms1"><div class="numbertext">5 / 6</div><img src="/static/images/cabins/bh1-4.JPG" style="width:100%"></div>
+        <div class="mySlides ms1"><div class="numbertext">6 / 6</div><img src="/static/images/cabins/bh1-5.JPG" style="width:100%"></div>
+        <a class="prev wide" onclick="plusSlides(-1,1)">&#10094;</a>
+        <a class="next wide" onclick="plusSlides(1,1)">&#10095;</a>
+        <div class="caption-container"><p id="c1"></p></div>
+        <div class="column"><img class="demo cursor d1" src="/static/images/thumbnails/bh1.JPG" style="width:100%" onclick="currentSlide(1,1)"></div>
+        <div class="column"><img class="demo cursor d1" src="/static/images/thumbnails/bh1-1.JPG" style="width:100%" onclick="currentSlide(2,1)"></div>
+        <div class="column"><img class="demo cursor d1" src="/static/images/thumbnails/bh1-2.JPG" style="width:100%" onclick="currentSlide(3,1)"></div>
+        <div class="column"><img class="demo cursor d1" src="/static/images/thumbnails/bh1-3.JPG" style="width:100%" onclick="currentSlide(4,1)"></div>
+        <div class="column"><img class="demo cursor d1" src="/static/images/thumbnails/bh1-4.JPG" style="width:100%" onclick="currentSlide(5,1)"></div>
+        <div class="column"><img class="demo cursor d1" src="/static/images/thumbnails/bh1-5.JPG" style="width:100%" onclick="currentSlide(6,1)"></div>
+    </div>
+</div><div id="m2" class="modal">
+    <span class="close cursor" onclick="closeModal('m2')">&times;</span>
+    <div class="modal-content">
+        <div class="mySlides ms2"><div class="numbertext">1 / 6</div><img src="/static/images/cabins/bh2.JPG" style="width:100%"></div>
+        <div class="mySlides ms2"><div class="numbertext">2 / 6</div><img src="/static/images/cabins/bh2-1.JPG" style="width:100%"></div>
+        <div class="mySlides ms2"><div class="numbertext">3 / 6</div><img src="/static/images/cabins/bh2-2.JPG" style="width:100%"></div>
+        <div class="mySlides ms2"><div class="numbertext">4 / 6</div><img src="/static/images/cabins/bh2-3.JPG" style="width:100%"></div>
+        <div class="mySlides ms2"><div class="numbertext">5 / 6</div><img src="/static/images/cabins/bh2-4.JPG" style="width:100%"></div>
+        <div class="mySlides ms2"><div class="numbertext">6 / 6</div><img src="/static/images/cabins/bh2-6.JPG" style="width:100%"></div>
+        <a class="prev wide" onclick="plusSlides(-1,2)">&#10094;</a>
+        <a class="next wide" onclick="plusSlides(1,2)">&#10095;</a>
+        <div class="caption-container"><p id="c2"></p></div>
+        <div class="column"><img class="demo cursor d2" src="/static/images/thumbnails/bh2.JPG" style="width:100%" onclick="currentSlide(1,2)"></div>
+        <div class="column"><img class="demo cursor d2" src="/static/images/thumbnails/bh2-1.JPG" style="width:100%" onclick="currentSlide(2,2)"></div>
+        <div class="column"><img class="demo cursor d2" src="/static/images/thumbnails/bh2-2.JPG" style="width:100%" onclick="currentSlide(3,2)"></div>
+        <div class="column"><img class="demo cursor d2" src="/static/images/thumbnails/bh2-3.JPG" style="width:100%" onclick="currentSlide(4,2)"></div>
+        <div class="column"><img class="demo cursor d2" src="/static/images/thumbnails/bh2-4.JPG" style="width:100%" onclick="currentSlide(5,2)"></div>
+        <div class="column"><img class="demo cursor d2" src="/static/images/thumbnails/bh2-6.JPG" style="width:100%" onclick="currentSlide(6,2)"></div>
+    </div>
+</div>
+</div><div id="m3" class="modal">
+    <span class="close cursor" onclick="closeModal('m3')">&times;</span>
+    <div class="modal-content">
+        <div class="mySlides ms3"><div class="numbertext">1 / 5</div><img src="/static/images/cabins/5.JPG" style="width:100%"></div>
+        <div class="mySlides ms3"><div class="numbertext">2 / 5</div><img src="/static/images/cabins/5-1.JPG" style="width:100%"></div>
+        <div class="mySlides ms3"><div class="numbertext">3 / 5</div><img src="/static/images/cabins/5-2.JPG" style="width:100%"></div>
+        <div class="mySlides ms3"><div class="numbertext">4 / 5</div><img src="/static/images/cabins/5-3.JPG" style="width:100%"></div>
+        <div class="mySlides ms3"><div class="numbertext">5 / 5</div><img src="/static/images/cabins/5-4.JPG" style="width:100%"></div>
+        <a class="prev wide" onclick="plusSlides(-1,3)">&#10094;</a>
+        <a class="next wide" onclick="plusSlides(1,3)">&#10095;</a>
+        <div class="caption-container"><p id="c3"></p></div>
+        <div class="column"><img class="demo cursor d3" src="/static/images/thumbnails/5.JPG" style="width:100%" onclick="currentSlide(1,3)"></div>
+        <div class="column"><img class="demo cursor d3" src="/static/images/thumbnails/5-1.JPG" style="width:100%" onclick="currentSlide(2,3)"></div>
+        <div class="column"><img class="demo cursor d3" src="/static/images/thumbnails/5-2.JPG" style="width:100%" onclick="currentSlide(3,3)"></div>
+        <div class="column"><img class="demo cursor d3" src="/static/images/thumbnails/5-3.JPG" style="width:100%" onclick="currentSlide(4,3)"></div>
+        <div class="column"><img class="demo cursor d3" src="/static/images/thumbnails/5-4.JPG" style="width:100%" onclick="currentSlide(5,3)"></div>
+    </div>
+</div>
+</div><div id="m4" class="modal">
+    <span class="close cursor" onclick="closeModal('m4')">&times;</span>
+    <div class="modal-content">
+        <div class="mySlides ms4"><div class="numbertext">1 / 2</div><img src="/static/images/cabins/25.JPG" style="width:100%"></div>
+        <div class="mySlides ms4"><div class="numbertext">2 / 2</div><img src="/static/images/cabins/25-1.JPG" style="width:100%"></div>
+        <a class="prev wide" onclick="plusSlides(-1,4)">&#10094;</a>
+        <a class="next wide" onclick="plusSlides(1,4)">&#10095;</a>
+        <div class="caption-container"><p id="c4"></p></div>
+        <div class="column"><img class="demo cursor d4" src="/static/images/thumbnails/25.JPG" style="width:100%" onclick="currentSlide(1,4)"></div>
+        <div class="column"><img class="demo cursor d4" src="/static/images/thumbnails/25-1.JPG" style="width:100%" onclick="currentSlide(2,4)"></div>
+    </div>
+</div>
+</div><div id="m5" class="modal">
+    <span class="close cursor" onclick="closeModal('m5')">&times;</span>
+    <div class="modal-content">
+        <div class="mySlides ms5"><div class="numbertext">1 / 2</div><img src="/static/images/cabins/26.JPG" style="width:100%"></div>
+        <div class="mySlides ms5"><div class="numbertext">2 / 2</div><img src="/static/images/cabins/26-1.JPG" style="width:100%"></div>
+        <a class="prev wide" onclick="plusSlides(-1,5)">&#10094;</a>
+        <a class="next wide" onclick="plusSlides(1,5)">&#10095;</a>
+        <div class="caption-container"><p id="c5"></p></div>
+        <div class="column"><img class="demo cursor d5" src="/static/images/thumbnails/26.JPG" style="width:100%" onclick="currentSlide(1,5)"></div>
+        <div class="column"><img class="demo cursor d5" src="/static/images/thumbnails/26-1.JPG" style="width:100%" onclick="currentSlide(2,5)"></div>
+    </div>
+</div>
+</div><div id="m6" class="modal">
+    <span class="close cursor" onclick="closeModal('m6')">&times;</span>
+    <div class="modal-content">
+        <div class="mySlides ms6"><div class="numbertext">1 / 6</div><img src="/static/images/cabins/19-1.JPG" style="width:100%"></div>
+        <div class="mySlides ms6"><div class="numbertext">2 / 6</div><img src="/static/images/cabins/19-2.JPG" style="width:100%"></div>
+        <div class="mySlides ms6"><div class="numbertext">3 / 6</div><img src="/static/images/cabins/19-3.JPG" style="width:100%"></div>
+        <div class="mySlides ms6"><div class="numbertext">4 / 6</div><img src="/static/images/cabins/19-4.JPG" style="width:100%"></div>
+        <div class="mySlides ms6"><div class="numbertext">5 / 6</div><img src="/static/images/cabins/19-5.JPG" style="width:100%"></div>
+        <div class="mySlides ms6"><div class="numbertext">6 / 6</div><img src="/static/images/cabins/19-6.JPG" style="width:100%"></div>
+        <a class="prev wide" onclick="plusSlides(-1,6)">&#10094;</a>
+        <a class="next wide" onclick="plusSlides(1,6)">&#10095;</a>
+        <div class="caption-container"><p id="c6"></p></div>
+        <div class="column"><img class="demo cursor d6" src="/static/images/thumbnails/19-1.JPG" style="width:100%" onclick="currentSlide(1,6)"></div>
+        <div class="column"><img class="demo cursor d6" src="/static/images/thumbnails/19-2.JPG" style="width:100%" onclick="currentSlide(2,6)"></div>
+        <div class="column"><img class="demo cursor d6" src="/static/images/thumbnails/19-3.JPG" style="width:100%" onclick="currentSlide(3,6)"></div>
+        <div class="column"><img class="demo cursor d6" src="/static/images/thumbnails/19-4.JPG" style="width:100%" onclick="currentSlide(4,6)"></div>
+        <div class="column"><img class="demo cursor d6" src="/static/images/thumbnails/19-5.JPG" style="width:100%" onclick="currentSlide(5,6)"></div>
+        <div class="column"><img class="demo cursor d6" src="/static/images/thumbnails/19-6.JPG" style="width:100%" onclick="currentSlide(6,6)"></div>
+    </div>
+</div>
+</div><div id="m7" class="modal">
+    <span class="close cursor" onclick="closeModal('m7')">&times;</span>
+    <div class="modal-content">
+        <div class="mySlides ms7"><div class="numbertext">1 / 6</div><img src="/static/images/cabins/g9.JPG" style="width:100%"></div>
+        <div class="mySlides ms7"><div class="numbertext">2 / 6</div><img src="/static/images/cabins/g9-1.JPG" style="width:100%"></div>
+        <div class="mySlides ms7"><div class="numbertext">3 / 6</div><img src="/static/images/cabins/g9-2.JPG" style="width:100%"></div>
+        <div class="mySlides ms7"><div class="numbertext">4 / 6</div><img src="/static/images/cabins/g1.JPG" style="width:100%"></div>
+        <div class="mySlides ms7"><div class="numbertext">5 / 6</div><img src="/static/images/cabins/g5.JPG" style="width:100%"></div>
+        <div class="mySlides ms7"><div class="numbertext">6 / 6</div><img src="/static/images/cabins/g24.JPG" style="width:100%"></div>
+        <a class="prev wide" onclick="plusSlides(-1,7)">&#10094;</a>
+        <a class="next wide" onclick="plusSlides(1,7)">&#10095;</a>
+        <div class="caption-container"><p id="c7"></p></div>
+        <div class="column"><img class="demo cursor d7" src="/static/images/thumbnails/g9.JPG" style="width:100%" onclick="currentSlide(1,7)"></div>
+        <div class="column"><img class="demo cursor d7" src="/static/images/thumbnails/g9-1.JPG" style="width:100%" onclick="currentSlide(2,7)"></div>
+        <div class="column"><img class="demo cursor d7" src="/static/images/thumbnails/g9-2.JPG" style="width:100%" onclick="currentSlide(3,7)"></div>
+        <div class="column"><img class="demo cursor d7" src="/static/images/thumbnails/g1.JPG" style="width:100%" onclick="currentSlide(4,7)"></div>
+        <div class="column"><img class="demo cursor d7" src="/static/images/thumbnails/g5.JPG" style="width:100%" onclick="currentSlide(5,7)"></div>
+        <div class="column"><img class="demo cursor d7" src="/static/images/thumbnails/g24.JPG" style="width:100%" onclick="currentSlide(6,7)"></div>
+    </div>
+</div>
+</div>
+  <script src="/static/js/galery.js"></script>
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+{% endblock %}

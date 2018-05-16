@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="well">
+    {% csrf_token %}
+    <!-- business card start -->
+    <div class="pull-right text-center" style="width:300px;">
+      <div style="margin: 20px; padding: 5px; border: 1px solid black;">
+          Please contact us directly<br>for additional information.<br><a href="tel:1-613-283-2080">1-613-283-2080</a><br>
+          <a href="mailto:admin@sandybeachatotterlake.com"><font size="-1">admin@sandybeachatotterlake.com</font></a>
+      </div>
+    </div>
+    <!-- business card end -->
+    <h1>Our Trailer Park<font size="-1"></h1>
+	<p>Sandy Beach at Otter Lake offers 40 seasonal trailer sites with fully serviced lots. 
+	   In addition, we have a newly renovated public bathroom and shower houses for your convenience.</p> 
+	<p>Currently there are two trailers "For Sale By Owner". Please contact the owners for more details.</p> 
+</div>    
+<div>
+	<h2>Events</h2>
+	<ol> 
+	    <li>AGM - Date and time is TBD.  </li>
+		<li>Docks: no ETA for installing docks. Lake is frozen... :(</li>
+    </ol>
+</div>
+
+{% endblock %}

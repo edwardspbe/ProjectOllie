@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="well">
+    {% csrf_token %}
+    <h1>Notifications</h1>
+	<p>Latest notifications sent.  More details coming soon. 
+	<ul> 
+	{% if events %}
+        {% for note in notifications %}
+	        <li>{{ note }}</li>
+        {% endfor %} 
+	{% else %}
+	    <li> No current notifications</li>
+	{% endif %}
+	</ul>
+</div>    
+<div>
+	<h2>Events</h2>
+	<p>Latest events that occured at a locations being monitored.  Events requiring notifications can be seen above.</p>
+	<ul> 
+	{% if events %}
+        {% for event in events %}
+	        <li>{{ event }}</li>
+	    {% endfor %}
+	{% else %}
+	    <li> No current events</li>
+	{% endif %}
+	</ul>
+</div>
+
+{% endblock %}

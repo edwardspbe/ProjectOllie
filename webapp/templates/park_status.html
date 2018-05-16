@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="well">
+  {% csrf_token %}
+  <h1 style="color: #337ab7;">Currently monitored locations</h1>
+  {% if site_details %}
+      {% for key,value in site_details.items %}
+          <hr class="style5"><h3>{{ key }}</h3>
+    	  <ul>
+    	  {%for type,state in value.items %}
+    	      <li><b>{{ type }}</b> is currently {{ state }}</li>
+          {% endfor %}
+    	  </ul>
+      {% endfor %}
+  {% else %}
+      <p>Not currently monitoring any locations or devices.</p>
+  {% endif %}
+</div>    
+{% endblock %}
