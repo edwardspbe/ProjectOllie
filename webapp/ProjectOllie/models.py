@@ -14,24 +14,17 @@ class Profile(models.Model):
     location = models.CharField("Location", max_length=30, blank=True)
     address = models.CharField("Address", max_length=30, blank=True)
     date = models.DateField("Date Joined", null=True, blank=True)
+    cell_no = models.CharField("Mobile No.", max_length=10, default="mobile")
+    phone_no = models.CharField("Home No.", max_length=10, null=True, blank=True)
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
+#@receiver(post_save, sender=User)
+#def create_user_profile(sender, instance, created, **kwargs):
+#    if created:
+#        Profile.objects.create(user=instance)
 
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
-
-PHONENO_CHOICES = (
-    (0, 'alternate'),
-    (1, 'primary'), 
-)
-class PhoneNo(models.Model):
-    user = models.ForeignKey(User)
-    number = models.CharField(max_length=15)
-    state = models.SmallIntegerField('State', choices=PHONENO_CHOICES)
+#@receiver(post_save, sender=User)
+#def save_user_profile(sender, instance, **kwargs):
+#    instance.profile.save()
 
 
 ####################################################################################
@@ -39,6 +32,15 @@ class PhoneNo(models.Model):
 STATE_CHOICES = (
     (0, 'disabled'), 
     (1, 'enabled'),
+    (2, 'unregistered'),
+)
+STATUS_CHOICES = (
+    (0, 'off'), 
+    (1, 'on'),
+    (2, 'closed'), 
+    (3, 'open'),
+    (4, 'monitoring'),
+    (5, 'waiting'),
 )
 CALL_CHOICES = (
     (0, 'disabled'), 
@@ -46,38 +48,71 @@ CALL_CHOICES = (
     (2, 'maintenance'),
     (3, 'service'),
 )
-class OnCallDetails(models.Model):
+class OnCallUser(models.Model):
     user = models.ForeignKey(User)
-    phone_no = models.CharField(max_length=10)
     state = models.SmallIntegerField('State', choices=CALL_CHOICES)
 
 ####################################################################################
 #Ollie monitors...
+#Monitoring locations
 class Location(models.Model):
     name = models.CharField('Location', max_length=50)
+    ipaddr = models.CharField('IP Addr', max_length=16, default=1)
     location = models.CharField('Details', max_length=200)
     coordinates = models.CharField('Coordinates', max_length=30)
+    state = models.SmallIntegerField('State', choices=STATE_CHOICES, default=0)
+    time = models.DateTimeField('Time', auto_now=True)
 
-class Camera(models.Model):
-    name = models.CharField('Device Name', max_length=50)
-    location = models.ForeignKey(Location)
-    ipaddr = models.CharField('IP Addr', max_length=16)
+    def __str__(self):
+        return self.name
+
+#Monitoring function
+class Function(models.Model):
+    FUNCTION_CHOICES = (
+        (0, 'light'), 
+        (1, 'door'),
+        (2, 'camera'),
+        (3, 'button'),
+        (4, 'wind'),
+        (5, 'humidity'),
+        (6, 'temperature'),
+        (7, 'water'),
+    )
+    type = models.SmallIntegerField('Type', choices=FUNCTION_CHOICES)
+    handler = models.TextField('Function Handler', null=True, blank=True)
+
+    def __str__(self):
+        return self.get_type_display()
+
+    def handler_verbose(self):
+        return dict(Function.FUNCTION_CHOICES)[self.flavor]
+
+#Devices to be monitored
+class Device(models.Model):
+    name = models.CharField('Monitored Device', max_length=50)
+    location = models.ForeignKey(Location, default=1)
+    function = models.ForeignKey(Function, default=1)
     state = models.SmallIntegerField('State', choices=STATE_CHOICES)
+    status = models.SmallIntegerField('Status', choices=STATUS_CHOICES, default=0)
+    time = models.DateTimeField('Time', auto_now=True)
 
-LIGHT_STATE = (
-    (0, 'off'), 
-    (1, 'on'),
-)
-class Light(models.Model):
-    location = models.ForeignKey(Location)
-    state = models.SmallIntegerField('State', choices=LIGHT_STATE)
+    def state_verbose(self):
+        return dict(STATE_CHOICES)[self.flavor]
 
-DOOR_STATE = (
-    (0, 'closed'), 
-    (1, 'open'),
-)
-class Door(models.Model):
-    location = models.ForeignKey(Location)
-    state = models.SmallIntegerField('State', choices=DOOR_STATE)
+#Alarms raised on Lights, Doors and Video
+class Alarm(models.Model):
+    device = models.ForeignKey(Device, default=1)
+    time = models.DateTimeField('Time', auto_now_add=True)
+
+#Notifications result from critical alarms being raised.
+class Notifications(models.Model):
+    NOTE_CHOICES = (
+        (0, 'email'), 
+        (1, 'sms'),
+    )
+    type = models.SmallIntegerField('Type', choices=NOTE_CHOICES)
+    alarm = models.ForeignKey(Alarm, default=1)
+    time = models.DateTimeField('Time', auto_now_add=True)
+
 
 

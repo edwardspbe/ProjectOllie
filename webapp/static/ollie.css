@@ -1,17 +1,49 @@
+html {
+	background: url(../images/brand.jpg) no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
 body {
     margin: 3%;
     background-color: rgba(255, 255, 255, 0.93);
-    font-family: Verdana, sans-serif;
+    font-family: sans-serif;
+	font-size: 12px;
+}
+li { 
+    list-style-type: none;
+}
+h1 { 
+    font-size: 24px; 
+    color: #337ab7;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+h2 { font-size: 18px; }
+h3 { font-size: 16px; }
+li.normal { 
+    display: list-item;
+	list-style: circle;
+	margin-left: 10px;
+}
+
+/*HR styles found at; https://codepen.io/ibrahimjabbari/pen/ozinB */
+hr.style5 {
+	background-color: #fff;
+	border-top: 2px dashed #8c8b8b;
 }
 
 .olliebrand {
     text-shadow: 1px 1px #000;
+	font-size: 24px;
     color: #f5dd5d;
 }
 
 .ollienav {
 	border:2px solid grey; 
-	margin-bottom: 0px; 
+	margin-bottom: 0px;
+	margin-top: 10px;
 	background-color: #73a6ff;
 }
 
@@ -32,4 +64,5 @@ body {
     -khtml-box-sizing: border-box; /* konqueror */
     min-height:500px;
     max-height:500px;
+	overflow-y:scroll; 
 }

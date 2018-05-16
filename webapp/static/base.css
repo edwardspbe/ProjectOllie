@@ -447,11 +447,11 @@ select[multiple] {
 /* FORM BUTTONS */
 
 .button, input[type=submit], input[type=button], .submit-row input, a.button {
-    background: #fff;
+    background: #79aec8;
     padding: 10px 15px;
-    border: 1px;
-    border-radius: 2px;
-    color: #72A6FF;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
     cursor: pointer;
 }
 
@@ -462,8 +462,7 @@ a.button {
 .button:active, input[type=submit]:active, input[type=button]:active,
 .button:focus, input[type=submit]:focus, input[type=button]:focus,
 .button:hover, input[type=submit]:hover, input[type=button]:hover {
-    background: #73a6ff;
-    color: #fff;
+    background: #609ab6;
 }
 
 .button[disabled], input[type=submit][disabled], input[type=button][disabled] {
@@ -521,7 +520,8 @@ input[type=button][disabled].default {
     font-weight: 400;
     font-size: 13px;
     text-align: left;
-    background: #72A6FF;
+/*    background: #79aec8;*/
+    background: #73a6ff;
     color: #fff;
 }
 
@@ -825,6 +825,7 @@ table#change-history tbody th {
     width: auto;
     height: 40px;
     padding: 10px 40px;
+/*    background: #417690;*/
     background: #73a6ff;
     line-height: 40px;
     color: #ffc;
@@ -847,9 +848,8 @@ table#change-history tbody th {
     padding: 0;
     margin: 0 20px 0 0;
     font-weight: 300;
-    text-shadow: 1px 1px #000;
     font-size: 24px;
-    color: #000;
+    color: #f5dd5d;
 }
 
 #branding h1, #branding h1 a:link, #branding h1 a:visited {

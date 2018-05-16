@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from ProjectOllie import views
+from ProjectOllie import views, monitor
 from django.contrib.auth import views as auth_views
 
 admin.site.site_title = 'Sandy Beach at Otter Lake'
@@ -34,11 +34,13 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'profile/', views.profile),
     #url(r'profile/(?P<user>\w)', views.profile),
-    url(r'get_light/', views.get_light),
-    url(r'set_light/', views.set_light),
-    url(r'get_door/', views.get_door),
-    url(r'set_door/', views.set_door),
-    url(r'get_location/', views.get_location),
-    url(r'set_location/', views.set_location),
+    url(r'support/', views.support),
+    url(r'notifications/', views.notifications),
+    url(r'park_state/', views.park_state),
+    url(r'cabins/', views.cabins),
+    url(r'trailers/', views.trailers),
+    url(r'services/', views.services),
+    url(r'checkin', monitor.checkin),
+    url(r'dev_state', monitor.dev_state),
     url(r'^$', views.index, name='index'),
 ]

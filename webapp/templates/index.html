@@ -1,18 +1,42 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="well">
-  <h1 style="color: #337ab7;">Sandy Beach Intranet</h1>
+<div>
     {% csrf_token %}
+    <!-- business card start -->
+    <div class="pull-right text-center" style="width:300px;">
+      <div style="margin: 20px; padding: 5px; border: 1px solid black;">
+          Please contact us directly<br>for additional information.<br><a href="tel:1-613-283-2080">1-613-283-2080</a><br>
+          <a href="mailto:admin@sandybeachatotterlake.com"><font size="-1">admin@sandybeachatotterlake.com</font></a>
+      </div>
+    </div>
+    <!-- business card end -->
     {% if user.is_authenticated %}
-        <p>Welcome {{ user.first_name }}.</p>
+        <h1>Welcome <font size="-1">{{ user.first_name }}</h1>
     {% else %}
-    <p>Welcome guest.</p>
-    <p>As a guest of Otter Lake at Sandy Beach you can browse information about our park here.  
-    To use this sites full features, please send an email request to admin@sandybeachatotterlake.com 
-    so that we can register you as a user.</p>  
-    <p>If you are already a registered user, please <a href="/login">log in</a> to continue.</p>
-    <p>Best regards</p>
+        <h1>Welcome <font size="-1">Guests</h1>
+        <p>As a guest of Otter Lake at Sandy Beach you can browse information about our park here.  
+        To use this sites full features, please send an email request to admin@sandybeachatotterlake.com 
+        so that we can register you as a user.</p>  
+        <p>If you are already a registered user, please <a href="/login">log in</a> to continue.</p>
     {% endif %}
 </div>    
+<div>
+    <p>Please use this site as your resource for all things related to your stay at Sandy Beach at Otter Lake.
+	   This site is only available to you while connected to our free Wifi.  Please bookmark this page and come
+	   back often to stay current with all activities planned this season.</p>
+	<h2>Events</h2>
+	<ul class="list-group"> 
+	    <li class="list-group-item">Park is opening as usual for our 104th year on Victoria Day weekend.  
+		  <ul>
+		      <li class="normal">Guests are welcome to come up to perform maintenance on their trailers before then.</li>
+			  <li class="normal">Please take care to stay on the roads until the grounds dry up more to prevent any 
+			  damage to the grounds.</li>
+			  <li class="normal">Be aware there is no ETA for turning on power and water due to the late spring 
+			  arrival... ground is still frozen.</li></ul>
+	    </li>
+		<li class="list-group-item">Docks: no ETA for installing docks. Lake is frozen... :(</li>
+    </ul>
+</div>
+
 {% endblock %}

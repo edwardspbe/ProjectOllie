@@ -4,6 +4,7 @@
 <head>
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" />
+    <!--link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" /-->
     <link rel="stylesheet" type="text/css" href="/static/css/ollie.css" />
     {% block extrastyle %}{% endblock %}
     {% block extrahead %}
@@ -20,18 +21,26 @@
     <link rel="icon" href="/static/img/favicon.ico">
 </head>
 <body>
+    {% block messages %}
+        {% if messages %}
+        <ul class="messagelist">{% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+        {% endfor %}</ul>
+        {% endif %}
+    {% endblock messages %}
   <div class="container-fluid">
     <nav class="navbar navbar-light ollienav"> 
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" 
 		  aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand olliebrand" href="/">Sandy Beach at Otter Lake</a>
+          <a class="navbar-brand olliebrand" href="/">Sandy Beach at Otter Lake Intranet</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right olliebrand">
+          <ul class="nav navbar-nav navbar-right olliemenu">
             {% if user.is_authenticated %}
               <li class="dropdown">
                 <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
@@ -40,7 +49,6 @@
                   <li><a href="/profile/">My Profile</a></li>
 		  {% if user.is_staff %}
                      <li><a href="/admin">Site Admin</a></li>
-                     <li><a href="/notices">Notices</a></li>
 		  {% endif %}
                   <li><a href="/admin/logout">Log out</a></li>
                 </ul>
@@ -55,28 +63,30 @@
         <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="/">
                   <span data-feather="home"></span>
                   Home <span class="sr-only"></span>
                 </a>
               </li>
+		  {% if user.is_staff %}
               <li class="nav-item">
-                <a class="nav-link" href="/">
-                  <span data-feather="file"></span>
-                  Services
-                </a>
+                <a class="nav-link" href="/park_state"><span data-feather="file"></span> Park State </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/">
-                  <span data-feather="shopping-cart"></span>
-                  Trailers
-                </a>
+                <a class="nav-link" href="/notifications"><span data-feather="file"></span> Notifications </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/">
-                  <span data-feather="shopping-cart"></span>
-                  Cabins
-                </a>
+                <a class="nav-link" href="/support"><span data-feather="file"></span> On-Site Support </a>
+              </li>
+		   {% endif %}
+              <li class="nav-item">
+                <a class="nav-link" href="/services"><span data-feather="file"></span> Services </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/trailers"><span data-feather="shopping-cart"></span> Trailers </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/cabins"><span data-feather="shopping-cart"></span> Cabins </a>
               </li>
             </ul>
         </div>

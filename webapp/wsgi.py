@@ -10,11 +10,11 @@ https://docs.djangoproject.com/en/1.10/howto/deployment/wsgi/
 import os
 import sys
 
-path = '/var/www/'
+path = '/opt/'
 if path not in sys.path:
     sys.path.append(path)
-    sys.path.append('/var/www/ProjectOllie/')
-    sys.path.append('/var/www/ProjectOllie/ProjectOllie/')
+    sys.path.append('/opt/ProjectOllie/')
+    sys.path.append('/opt/ProjectOllie/ProjectOllie/')
 
 sys.path.append('/usr/lib/python2.7/dist-packages/')
 

@@ -6,19 +6,14 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email',)
-        fieldsets = (('',{ 'fields':('username',
-                                    ('first_name','last_name'), 
-                                      'email',)
-                         } ))
+        
 
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ( 'bio', 'location', 'date')
-        fieldsets = (('',{ 'fields':(('location', 'date'), 
-                                      'bio'), } ))
-        widgets = {
-                    'bio':    forms.Textarea(attrs={'cols': 70, 'rows': 5}),
+        fields = ( 'cell_no', 'phone_no', 'bio', 'location', 'date')
+        widgets = { 'bio':   forms.Textarea(attrs={'cols': 90, 'rows': 2}), 
+                    'date':  forms.DateInput(attrs={'type': 'date'}),
         }
 
 

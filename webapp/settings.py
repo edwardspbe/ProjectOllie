@@ -25,7 +25,7 @@ SECRET_KEY = 'z^#6^%16k17ufiwiwdgx2(m8l^azr4e(&$2k-8#-lj*0r2_psf'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.98', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.1.97', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -56,7 +56,7 @@ ROOT_URLCONF = 'urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["/var/www/ProjectOllie/templates"],
+        'DIRS': ["/opt/ProjectOllie/templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'debug': True,
@@ -80,7 +80,8 @@ DATABASES = {
     'default': {
 #        'ENGINE': 'django.db.backends.mysql',
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': '/opt/ProjectOllie/db.sqlite3',
         #'OPTIONS': {
         #    'read_default_file': '/etc/mysql/my.cnf',
         #    'sql_mode': 'STRICT_TRANS_TABLES',
@@ -125,8 +126,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
+MEDIA_ROOT = '/opt/static/'
+MEDIA_URL = '/media/'
+ADMIN_MEDIA_PREFIX = '/static/admin'
+
 STATIC_URL = '/static/'
-STATIC_ROOT = '/var/www/static'
+STATIC_ROOT = '/opt/static'
 
 DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
 
