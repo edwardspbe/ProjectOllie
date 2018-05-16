@@ -4,8 +4,10 @@ git add README.md
 git commit -m "first commit"
 git remote add origin https://github.com/edwardspbe/ProjectOllie.git
 git config git config --global user.email "paul.e@rogers.com"
-git config --global user.email "paul.e@rogers.com"
+
 git config --global user.email
+git config --global user.email "paul.e@rogers.com"
+
 git commit -m "first commit"
 git push -u origin master
 git add .
@@ -27,3 +29,6 @@ git commit -m "adding banner.jpg"
 
 #push commitments to the git server
 git push
+
+#single file checkin
+git commit -m 'captured first test-case: open/close door' -- ProjectOllie/olliemon
