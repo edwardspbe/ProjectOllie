@@ -16,4 +16,7 @@ else
         /etc/init.d/network restart
     fi
 fi
- 
+
+
+#test case 1: CMD to turn on the lights
+#curl  -X POST http://192.168.1.97/dev_state -d "name=SS-Door&status=3"
