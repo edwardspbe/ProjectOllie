@@ -160,7 +160,7 @@ def main():
     GPIO.setup(abutt, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.add_event_detect(sbutt, GPIO.RISING, callback=s_callbk, bouncetime=200)
     GPIO.add_event_detect(abutt, GPIO.RISING, callback=a_callbk, bouncetime=200)
-    do_blinkon(blue)
+    blinkon(blue)
     while True:
         sleep(30)
         #check state of buttons and led
