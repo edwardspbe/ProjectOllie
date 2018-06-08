@@ -1,0 +1,6 @@
+#!/bin/bash 
+# INSTALL - utility to install all of Ollies services
+
+cp oays_all.conf oay_service oays_simple_server oays_simple_server.py ollie_at_your_service.conf ollie_at_your_service.py /opt/ollie
+ln -s /opt/ollie/oay_service /etc/init.d/oay_service 
+ln -s /opt/ollie/oays_simple_server /etc/init.d/oays_simple_server

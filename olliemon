@@ -1,22 +1,67 @@
 #!/bin/bash -x 
+##############################################################################
+# olliemon - task responsible for maintaining an operating environment for
+#            a deployed device.  This task will verify that the network is
+#            operational, then send a heartbeat to the gateway configured in
+#            our config file.  The heartbeat will return the required tasks 
+#            that should be functioning on this device along with associated
+#            names, states and responsibilities.  It will then start the task
+#            if not already running.  Each task will operate independently 
+#            and will in-turn send event details to the gateway as they occur.
 
 include /opt/ollie/conf/config
 
-ping -c1 google.ca
-if [ $? -eq 0 ] 
-then
-    #all is find, we can speak to the Internet.
-    echo 1 > /var/run/ollie/internet
-else
-    #hmmm, cannot see the Internet, let's try our home server
-    ping -c1 $gateway
-    if [ $? -ne 0 ] 
+function checknet()
+{
+    ping -c1 google.ca
+    if [ $? -eq 0 ] 
     then
-        #our network connection must be down, reload the network
-        /etc/init.d/network restart
+        #all is fine, we can speak to the Internet.
+        echo 0 > /var/run/ollie/internet
+        return 0
+    else
+        #hmmm, cannot see the Internet, let's try our home server
+        ping -c1 ${gateway}
+        if [ $? -eq 0 ] 
+        then
+            #we have limited intranet
+            echo 1 > /var/run/ollie/internet
+            return 1
+        else
+            #we have no network comm...?
+            echo 2 > /var/run/ollie/internet
+            return 2
+        fi
     fi
+}
+
+function restartnet()
+{
+    #our network connection must be down, reload the network
+    /etc/init.d/network restart
+}
+
+#main routine starts here... 
+#network testing and restart as required...
+output=/tmp/config.json
+net=`checknet`
+if [ $net -lt 2 ] 
+then
+    #we have a network connection (possibly limited), send heartbeat accordingly
+    #but remember, we cannot send SMS
+    curl  -X POST http://${gateway}/checkin -o $output
+    jq -c '.[]' $output | while read item; do
+        echo $item
+    done
+    
+else
+    #no net, restart network
+    restartnet
+    exit 1
 fi
 
 
 #test case 1: CMD to turn on the lights
 #curl  -X POST http://192.168.1.97/dev_state -d "name=SS-Door&status=3"
+
+#curl  -X POST http://192.168.1.97/dev_state -d "name=OllieAYS=1"
