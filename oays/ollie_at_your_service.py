@@ -127,7 +127,7 @@ def s_callbk(pin):
             logging.info("SMS Send Successful!")
             do_blink_loop(working)
             s_callbk.service_ts = datetime.now()
-            do_blinkon(green)
+            blinkon(green)
             s_callbk.led_state = green
         else :
             logging.info("SMS SEND ERROR: [%s]" % obj['error'])
@@ -160,7 +160,7 @@ def main():
     GPIO.setup(abutt, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.add_event_detect(sbutt, GPIO.RISING, callback=s_callbk, bouncetime=200)
     GPIO.add_event_detect(abutt, GPIO.RISING, callback=a_callbk, bouncetime=200)
-    blinkoff(wait)
+    do_blinkon(blue)
     while True:
         sleep(30)
         #check state of buttons and led
