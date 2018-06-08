@@ -57,10 +57,10 @@ errorstate = (
     (red,small,25), 
 )
 working = (
+    (red,small,5), 
     (yellow,small,5), 
-    (cyan,small,5), 
-    (white,small,5), 
-    (green,tiny,30), 
+    (blue,small,5), 
+    (green,tiny,300), 
 )
 alreadywaiting= (
     (green,tiny,50), 
@@ -99,7 +99,7 @@ def a_callbk():
 
 #called when service button is tripped
 def s_callbk(pin):
-    with open('/opt/ollie_at_your_service.conf') as json_data_file:
+    with open('/opt/ollie/ollie_at_your_service.conf') as json_data_file:
         confdata = json.load(json_data_file)
     
     #this is important in case someone is pushing the button non-stop
