@@ -21,20 +21,24 @@ class S(BaseHTTPRequestHandler):
         with open('/opt/ollie/oays_all.conf') as json_data_file:
             confdata = json.load(json_data_file)
         options = ""
-        for name in confdata['numbers'] :
-            options += "<input type='checkbox' name='oncall' value='%s'>%s<br>" % (name,name)
+        for name,num in confdata['numbers'].iteritems() :
+            options += "<input type='checkbox' name='oncall' value='%s'>%s - ( %s )<br>" % (name,name,num)
         
-        self.wfile.write("<html> <body> <h1>Ollie at your Service config...</h1>")
-        self.wfile.write("<p>Currently configured as;</p>")
+        self.wfile.write("<html><style>label { display: block; padding-right: 2.5em; padding-left: 2em; }</style>")
+        self.wfile.write("<body> <h1>Ollie at your Service config...</h1>")
+        self.wfile.write("<table width='300'><tr><th valign='top'>On-Call List: </th><td>")
         self.wfile.write(current)
-        self.wfile.write("<hr><form action='/' method='POST'>")
+        self.wfile.write("</td></tr></table>")
+        self.wfile.write("<hr><h2>Change on-call list...</h2><form action='/' method='POST'>")
         self.wfile.write(options) 
         self.wfile.write("<input type='submit' value='Change Config'>")
         self.wfile.write("</form> </body></html>")
-        self.wfile.write("<hr><form action='/' method='POST'>")
-        self.wfile.write("<input type='text' name='name'></input><br>") 
-        self.wfile.write("<input type='text' name='number'></input><br>") 
-        self.wfile.write("<input type='submit' value='Add Number'>")
+        self.wfile.write("<hr><h2>Add Number to on-call list...</h2><form action='/' method='POST'>")
+        self.wfile.write("<table><tr>")
+        self.wfile.write("<th>Name</th><td><input type='text' name='name'></input></td>") 
+        self.wfile.write("</tr><tr><th>No.</th><td><input type='text' name='number'></input></td>") 
+        self.wfile.write("</tr><tr><td colspan=2><input type='submit' value='Add Number'></td></tr>")
+        self.wfile.write("</table>")
         self.wfile.write("</form> </body></html>")
  
     def do_POST(self):
