@@ -22,7 +22,7 @@ start() {
   #SCRIPT="python /opt/ollie/ollie_at_your_service.py"
   #$SCRIPT > $LOGFILE &
   #to see logged data use;  journalctl -u oays_simple_server.service
-  /opt/ollie/oays_simple_server.py &
+  /usr/bin/python /opt/ollie/oays_simple_server.py &
   sleep 2
   ps -ef | grep "[o]ays_simple_server.py" | awk '{print $2}' > $PIDFILE
   echo 'Service started' >&2

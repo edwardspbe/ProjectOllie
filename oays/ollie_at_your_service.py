@@ -112,6 +112,9 @@ def s_callbk(pin):
             do_blink_loop(alreadywaiting)
             GPIO.cleanup()
             return
+    else :
+        s_callbk.service_ts = datetime.now()
+        
             
     logging.info("service requested..  sending SMS to %s." % confdata['numbers'])
     answer=[]
@@ -126,13 +129,13 @@ def s_callbk(pin):
         if obj['success'] == True :
             logging.info("SMS Send Successful!")
             do_blink_loop(working)
-            s_callbk.service_ts = datetime.now()
             blinkon(green)
             s_callbk.led_state = green
         else :
             logging.info("SMS SEND ERROR: [%s]" % obj['error'])
+            s_callbk.service_ts = None
             do_blink_loop(errorstate)
-            do_blinkon(red)
+            blinkon(red)
             s_callbk.led_state = red
             break
 
@@ -142,10 +145,15 @@ def check_state():
         delta = datetime.now() - s_callbk.service_ts
         if delta.seconds > SmsQuietPeriod :
             s_callbk.service_ts = None
-            do_blinkoff(white)
-            
-    pass
-
+            blinkoff(white)
+            GPIO.cleanup()
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(sbutt, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            GPIO.setup(abutt, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            GPIO.add_event_detect(sbutt, GPIO.RISING, callback=s_callbk, bouncetime=200)
+            GPIO.add_event_detect(abutt, GPIO.RISING, callback=a_callbk, bouncetime=200)
+    else :
+        blinkon(green)
 
 def main():
   try:
