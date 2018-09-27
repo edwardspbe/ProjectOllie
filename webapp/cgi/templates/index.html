@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flask-Dropzone Demo</title>
+  {{ dropzone.load_css() }}
+  {{ dropzone.style('border: 2px dashed #0087F7; margin: 10%; min-height: 400px;') }}
+</head>
+<body>
+  <h1>Dropzone</h1>
+  <a href='/logout'>Logout</a>
+  <p>At this time, only TXT files can be uploaded</p>
+  {{ dropzone.create(action='upload') }}
+  {{ dropzone.load_js() }}
+  {{ dropzone.config() }}
+</body>
+</html>
