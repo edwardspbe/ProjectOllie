@@ -10,6 +10,8 @@
 # PI B+ pinout - http://www.keytosmart.com/raspberry-pi-b-gpio-details-pinout/
 #
 # Created:     13/03/2018
+#              03/01/2019 - updated to include test mode printing actions instead
+#                           of sending SMSs to allow for easier testing.
 # Copyright:   (c) paul.e@rogers.com 2018
 # Licence:     MIT
 #-------------------------------------------------------------------------------
@@ -37,12 +39,13 @@ from datetime import datetime
 sbutt = 21   #service button
 abutt = 26   #admin button
 red   = 17
-blue  = 27
-green = 22
+blue  = 22
+green = 27
 yellow = (red,green)
 cyan  = (blue,green)
 magenta = (red,blue)
 white = (red,blue,green)
+
 #blink times
 large=1
 medium=0.5
@@ -57,13 +60,11 @@ errorstate = (
     (red,small,25), 
 )
 working = (
-    (red,small,5), 
-    (yellow,small,5), 
-    (blue,small,5), 
-    (green,tiny,300), 
+    (magenta,medium,10), 
+    (green,medium,10), 
 )
 alreadywaiting= (
-    (green,tiny,50), 
+    (green,small,10), 
 )
 
 def blinkon(pins):
@@ -89,35 +90,14 @@ def do_blink_loop(cycle):
         for i in range(repeat) :
             blinkon(colour)
             sleep(time)
-            blinkoff(colour)
+            blinkoff(white)
             sleep(time)
 
 
-#called when admin button is tripped
-def a_callbk():
-    pass
-
-#called when service button is tripped
-def s_callbk(pin):
-    with open('/opt/ollie/ollie_at_your_service.conf') as json_data_file:
-        confdata = json.load(json_data_file)
-    
-    #this is important in case someone is pushing the button non-stop
-    if s_callbk.service_ts != None :
-        delta = datetime.now() - s_callbk.service_ts
-        if delta.seconds > SmsQuietPeriod :
-            s_callbk.service_ts = None
-        else :
-            logging.info("service request while in WAIT-PERIOD.")
-            do_blink_loop(alreadywaiting)
-            GPIO.cleanup()
-            return
-    else :
-        s_callbk.service_ts = datetime.now()
-        
-            
+def sendSMSNotification():
     logging.info("service requested..  sending SMS to %s." % confdata['numbers'])
     answer=[]
+    success=True
     for name in confdata['numbers'] :
         answer = requests.post('https://textbelt.com/text', {
                                'phone': confdata['numbers'][name],
@@ -126,34 +106,63 @@ def s_callbk(pin):
         })
         print "SMS sent to %s" % name
         obj = json.loads(answer.content)
-        if obj['success'] == True :
-            logging.info("SMS Send Successful!")
-            do_blink_loop(working)
-            blinkon(green)
-            s_callbk.led_state = green
-        else :
+        if obj['success'] != True :
             logging.info("SMS SEND ERROR: [%s]" % obj['error'])
             s_callbk.service_ts = None
-            do_blink_loop(errorstate)
             blinkon(red)
             s_callbk.led_state = red
-            break
+            return
+    blinkoff(white)
+    do_blink_loop(working)
+    blinkon(green)
+    s_callbk.led_state = green
+
+
+def logNotification():
+    logging.info("service requested..  logging notification to %s." % confdata['numbers'])
+    answer=[]
+    for name in confdata['numbers'] :
+        print "logging notification for %s" % name
+    blinkoff(white)
+    do_blink_loop(working)
+    blinkon(green)
+    s_callbk.led_state = green
+
+
+#called when admin button is tripped
+def a_callbk():
+    pass
+
+#called when service button is tripped
+def s_callbk(pin):
+    #this is important in case someone is pushing the button non-stop
+    if s_callbk.service_ts != None :
+        delta = datetime.now() - s_callbk.service_ts
+        if SmsQuietPeriod > delta.seconds :
+            logging.info("service request while in WAIT-PERIOD.")
+            return
+
+    s_callbk.service_ts = datetime.now()
+    #logNotification()
+    sendSMSNotification()
 
 #make sure we are operating properly and LEDs are indicating ready... 
 def check_state():
     if s_callbk.service_ts != None :
+        logging.info("in check_state with service_ts=%s" % s_callbk.service_ts )
         delta = datetime.now() - s_callbk.service_ts
         if delta.seconds > SmsQuietPeriod :
+            logging.info("in check_state: resetting timer..." )
             s_callbk.service_ts = None
             blinkoff(white)
-            GPIO.cleanup()
-            GPIO.setmode(GPIO.BCM)
-            GPIO.setup(sbutt, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-            GPIO.setup(abutt, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-            GPIO.add_event_detect(sbutt, GPIO.RISING, callback=s_callbk, bouncetime=200)
-            GPIO.add_event_detect(abutt, GPIO.RISING, callback=a_callbk, bouncetime=200)
+            blinkon(blue)
+        else :
+            blinkoff(white)
+            blinkon(green)
     else :
-        blinkon(green)
+        logging.info("in check_state, not in a wait state" )
+        blinkoff(white)
+        blinkon(blue)
 
 def main():
   try:
@@ -163,11 +172,14 @@ def main():
 
     #initialize buttons for input...
     print "waiting for button push"
+    GPIO.setwarnings(False)
+    GPIO.cleanup()
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(sbutt, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(abutt, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.add_event_detect(sbutt, GPIO.RISING, callback=s_callbk, bouncetime=200)
     GPIO.add_event_detect(abutt, GPIO.RISING, callback=a_callbk, bouncetime=200)
+    blinkoff(white)
     blinkon(blue)
     while True:
         sleep(30)
@@ -181,5 +193,7 @@ def main():
     GPIO.cleanup()
  
 if __name__ == '__main__':
+    with open('/opt/ollie/ollie_at_your_service.conf') as json_data_file:
+        confdata = json.load(json_data_file)
     main()
 
