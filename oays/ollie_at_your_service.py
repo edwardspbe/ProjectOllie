@@ -31,6 +31,7 @@ import RPi.GPIO as GPIO
 import multiprocessing
 import requests
 import json
+import os
 import logging
 from time import sleep
 from datetime import datetime
@@ -98,10 +99,13 @@ def sendSMSNotification():
     logging.info("service requested..  sending SMS to %s." % confdata['numbers'])
     answer=[]
     success=True
+    ip = os.popen("ip -4 a show wlan0 | grep inet | awk '{print $2}' | cut -d'/' -f1").read()
+    message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please reconfigure Ollie at: %s' % ip
+    #message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please reconfigure Ollie at: <a href="http://%s">%s</a>' % (ip,ip)
     for name in confdata['numbers'] :
         answer = requests.post('https://textbelt.com/text', {
                                'phone': confdata['numbers'][name],
-                               'message': 'Ollie needs help at the Snack Shack',
+                               'message': message,
                                'key': confdata['TextBelt']['key'],
         })
         print "SMS sent to %s" % name
@@ -122,7 +126,8 @@ def logNotification():
     logging.info("service requested..  logging notification to %s." % confdata['numbers'])
     answer=[]
     for name in confdata['numbers'] :
-        print "logging notification for %s" % name
+        logging.info("logging notification for %s" % name)
+        logging.info('please reconfigure at: <a href="http://%s/>http://%s</a>' % (ip,ip))
     blinkoff(white)
     do_blink_loop(working)
     blinkon(green)
