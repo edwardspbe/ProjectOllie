@@ -100,8 +100,10 @@ def sendSMSNotification():
     answer=[]
     success=True
     ip = os.popen("ip -4 a show wlan0 | grep inet | awk '{print $2}' | cut -d'/' -f1").read()
-    message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please reconfigure Ollie at: %s' % ip
-    #message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please reconfigure Ollie at: <a href="http://%s">%s</a>' % (ip,ip)
+    #message may not include URLs unless we are "whitelisted" by the TextBelt.com guys... 
+    #Whitelisted (Jun. 11, 2019) 
+    #message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please reconfigure Ollie at: %s' % ip
+    message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please reconfigure Ollie at: <a href="http://%s">%s</a>' % (ip,ip)
     for name in confdata['numbers'] :
         answer = requests.post('https://textbelt.com/text', {
                                'phone': confdata['numbers'][name],
