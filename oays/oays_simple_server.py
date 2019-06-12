@@ -4,6 +4,7 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import cgi
 import json
 import SocketServer
+import requests
 
 class S(BaseHTTPRequestHandler):
     def _set_headers(self):
@@ -13,21 +14,39 @@ class S(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self._set_headers()
+        #read configuration data
         with open('/opt/ollie/ollie_at_your_service.conf') as json_data_file:
             confdata = json.load(json_data_file)
         current = ""
+        #populate currently configured on-call list
         for name in confdata['numbers'] :
             current += "%s is enabled<br>" % name
         with open('/opt/ollie/oays_all.conf') as json_data_file:
             confdata = json.load(json_data_file)
         options = ""
+        #populate the available names and numbers
         for name,num in confdata['numbers'].iteritems() :
             options += "<input type='checkbox' name='oncall' value='%s'>%s - ( %s )<br>" % (name,name,num)
         
+        #get the latest quota figures so we will know when to purchase more...
+        resp = requests.get(url='https://textbelt.com/quota/%s' % confdata['TextBelt']['key'])
+        rdata = resp.json()
+        qmessage = "TextBelt Quota: "
+        if rdata['quotaRemaining'] > 25 :
+            qmessage += "(%s) messages remaining." % rdata['quotaRemaining']
+        else :
+            qmessage += "(%s) messages remaining.  " % rdata['quotaRemaining']
+            qmessage += "Renew quota at <a href='https://textbelt.com/'>textbelt.com</a>." 
+        print qmessage
+
+        #create the page content...
         self.wfile.write("<html><style>label { display: block; padding-right: 2.5em; padding-left: 2em; }</style>")
         self.wfile.write("<body> <h1>Ollie at your Service config...</h1>")
-        self.wfile.write("<table width='300'><tr><th valign='top'>On-Call List: </th><td>")
+        self.wfile.write("<table width='500'><tr><th valign='top'>On-Call List: </th><td>")
         self.wfile.write(current)
+        self.wfile.write("</td></tr>")
+        self.wfile.write("<tr><th valign='top'>TextBelt Quota:</th><td>")
+        self.wfile.write("%s" % qmessage )
         self.wfile.write("</td></tr></table>")
         self.wfile.write("<hr><h2>Change on-call list...</h2><form action='/' method='POST'>")
         self.wfile.write(options) 

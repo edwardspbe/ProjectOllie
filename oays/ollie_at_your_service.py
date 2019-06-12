@@ -103,7 +103,7 @@ def sendSMSNotification():
     #message may not include URLs unless we are "whitelisted" by the TextBelt.com guys... 
     #Whitelisted (Jun. 11, 2019) 
     #message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please reconfigure Ollie at: %s' % ip
-    message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please reconfigure Ollie at: <a href="http://%s">%s</a>' % (ip,ip)
+    message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please reconfigure Ollie at: http://%s' % ip
     for name in confdata['numbers'] :
         answer = requests.post('https://textbelt.com/text', {
                                'phone': confdata['numbers'][name],
