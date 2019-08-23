@@ -96,6 +96,9 @@ def do_blink_loop(cycle):
 
 
 def sendSMSNotification():
+    #read on-call data in case this has changed in the background...
+    with open('/opt/ollie/ollie_at_your_service.conf') as json_data_file:
+        confdata = json.load(json_data_file)
     logging.info("service requested..  sending SMS to %s." % confdata['numbers'])
     answer=[]
     success=True
@@ -104,9 +107,6 @@ def sendSMSNotification():
     #Whitelisted (Jun. 11, 2019) 
     #message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please reconfigure Ollie at: %s' % ip
     message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please reconfigure Ollie at: http://%s' % ip
-    #reread on-call data in case this has changed in the background...
-    with open('/opt/ollie/ollie_at_your_service.conf') as json_data_file:
-        confdata = json.load(json_data_file)
     for name in confdata['numbers'] :
         answer = requests.post('https://textbelt.com/text', {
                                'phone': confdata['numbers'][name],
@@ -128,11 +128,11 @@ def sendSMSNotification():
 
 
 def logNotification():
-    logging.info("service requested..  logging notification to %s." % confdata['numbers'])
-    answer=[]
-    #reread on-call data in case this has changed in the background...
+    #read on-call data in case this has changed in the background...
     with open('/opt/ollie/ollie_at_your_service.conf') as json_data_file:
         confdata = json.load(json_data_file)
+    logging.info("service requested..  logging notification to %s." % confdata['numbers'])
+    answer=[]
     for name in confdata['numbers'] :
         logging.info("logging notification for %s" % name)
         logging.info('please reconfigure at: <a href="http://%s/>http://%s</a>' % (ip,ip))
@@ -206,7 +206,5 @@ def main():
     GPIO.cleanup()
  
 if __name__ == '__main__':
-    with open('/opt/ollie/ollie_at_your_service.conf') as json_data_file:
-        confdata = json.load(json_data_file)
     main()
 
