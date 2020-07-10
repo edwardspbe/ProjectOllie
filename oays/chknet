@@ -1,11 +1,13 @@
-#!/bin/bash 
+#!/bin/bash -x
 
 #check to see if we are already running.  If yes, stop chknet and continue with this one.
 ans=`pgrep chknet`
-if [ $? -eq 0 ] 
-then 
-    pkill chknet
-fi
+for pid in $(pidof -x chknet); do
+    if [ $pid != $$ ]; then
+        echo "[$(date)] : chknet: Process is already running with PID $pid; aborting and restarting"
+        kill -9 $pid
+    fi
+done
 
 cntr=0
 DEFAULT_ROUTE=$(ip route show default | awk '/default/ {print $3}')
