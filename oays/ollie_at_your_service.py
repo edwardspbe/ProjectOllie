@@ -97,6 +97,7 @@ def do_blink_loop(cycle):
 
 def sendSMSNotification():
     #read on-call data in case this has changed in the background...
+    confdata = []
     with open('/opt/ollie/ollie_at_your_service.conf') as json_data_file:
         confdata = json.load(json_data_file)
     logging.info("service requested..  sending SMS to %s." % confdata['numbers'])
@@ -129,6 +130,7 @@ def sendSMSNotification():
 
 def logNotification():
     #read on-call data in case this has changed in the background...
+    confdata = []
     with open('/opt/ollie/ollie_at_your_service.conf') as json_data_file:
         confdata = json.load(json_data_file)
     logging.info("service requested..  logging notification to %s." % confdata['numbers'])
@@ -155,6 +157,7 @@ def s_callbk(pin):
             logging.info("service request while in WAIT-PERIOD.")
             return
 
+    logging.info("service requested... sending notification")
     s_callbk.service_ts = datetime.now()
     #logNotification()
     sendSMSNotification()
@@ -179,7 +182,7 @@ def check_state():
 
 def main():
   try:
-    logging.basicConfig(format='%(asctime)s %(message)s', filename='ss_not.log', level=logging.INFO)
+    logging.basicConfig(format='%(asctime)s %(message)s', filename='/var/log/ss_not.log', level=logging.INFO)
     #initialize the global timestamps
     s_callbk.service_ts = None    #service timestamp
 

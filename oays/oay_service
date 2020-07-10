@@ -24,6 +24,8 @@ start() {
   /opt/ollie/ollie_at_your_service.py > $LOGFILE &
   ps -ef | grep "[o]llie_at_your_service.py" | awk '{print $2}' > $PIDFILE
   echo 'Service started' >&2
+  #starting netwatcher...
+  /opt/ollie/chknet &
 }
 
 stop() {
@@ -33,7 +35,8 @@ stop() {
   fi
   echo 'Stopping service.' >&2
   kill -15 $(cat "$PIDFILE") && rm -f "$PIDFILE"
-  echo 'Service stopped' >&2
+  pkill chknet
+  echo 'Services stopped' >&2
 }
 
 uninstall() {
