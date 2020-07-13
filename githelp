@@ -32,3 +32,8 @@ git push
 
 #single file checkin
 git commit -m 'captured first test-case: open/close door' -- ProjectOllie/olliemon
+
+#other cmds
+git diff
+git show
+git status

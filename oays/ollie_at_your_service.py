@@ -107,7 +107,7 @@ def sendSMSNotification():
     #message may not include URLs unless we are "whitelisted" by the TextBelt.com guys... 
     #Whitelisted (Jun. 11, 2019) 
     #message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please reconfigure Ollie at: %s' % ip
-    message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please reconfigure Ollie at: http://%s' % ip
+    message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please connect to SandyBeachLOWER Wifi and reconfigure Ollie at: http://%s' % ip
     for name in confdata['numbers'] :
         answer = requests.post('https://textbelt.com/text', {
                                'phone': confdata['numbers'][name],
@@ -165,7 +165,7 @@ def s_callbk(pin):
 #make sure we are operating properly and LEDs are indicating ready... 
 def check_state():
     if s_callbk.service_ts != None :
-        logging.info("in check_state with service_ts=%s" % s_callbk.service_ts )
+        logging.info("in check_state with last service request at [%s]" % s_callbk.service_ts )
         delta = datetime.now() - s_callbk.service_ts
         if delta.seconds > SmsQuietPeriod :
             logging.info("in check_state: resetting timer..." )
