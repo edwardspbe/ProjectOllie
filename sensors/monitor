@@ -1,0 +1,95 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:          monitor
+# Required-Start:    $syslog
+# Required-Stop:     $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      
+# Short-Description: starts monitor_depth.py to measure distance
+# Description:       Olly sensor routine to monitor the depth of our 
+#                    %@?\$#* tank.  This tool will send notifications
+#                    via text msg and email with warnings and logged
+#                    data for monitoring purposes.  
+### END INIT INFO
+
+set -e
+
+# /etc/init.d/rsync: start and stop the rsync daemon
+
+DAEMON=/opt/ollie/monitor_depth.py
+PID_FILE=/var/run/monitor.pid
+
+test -x $DAEMON || exit 0
+
+. /lib/lsb/init-functions
+export PATH="${PATH:+$PATH:}/usr/sbin:/sbin"
+
+monitor_start() {
+    if start-stop-daemon --start --quiet --background  --pidfile $PID_FILE \
+	    --make-pidfile --exec $DAEMON 
+    then
+        rc=0
+        sleep 1
+        if ! kill -0 $(cat $PID_FILE) >/dev/null 2>&1; then
+            log_failure_msg "monitor daemon failed to start"
+            rc=1
+        fi
+    else
+        rc=1
+    fi
+    if [ $rc -eq 0 ]; then
+        log_end_msg 0
+    else
+        log_end_msg 1
+        rm -f $PID_FILE
+    fi
+} # monitor_start
+
+case "$1" in
+  start)
+    log_daemon_msg "Starting Ollie tank monitor daemon" "monitor"
+    if [ -s $PID_FILE ] && kill -0 $(cat $PID_FILE) >/dev/null 2>&1; then
+	log_progress_msg "apparently already running"
+	log_end_msg 0
+	exit 0
+    fi
+    monitor_start
+    ;;
+  stop)
+	log_daemon_msg "Stopping Ollie tank monitor daemon" "monitor"
+	start-stop-daemon --stop --quiet --oknodo --retry 30 --pidfile $PID_FILE
+	RETVAL="$?"
+	log_end_msg $RETVAL
+	if [ $RETVAL != 0 ]
+	then
+		exit 1
+	fi
+	rm -f $PID_FILE
+	;;
+
+  reload|force-reload)
+	log_warning_msg "Reloading Ollie tank monitor daemon is not allowed.  Use restart."
+	;;
+
+  restart)
+        log_daemon_msg "Restarting Ollie tank monitor daemon" "monitor"
+        if [ -s $PID_FILE ] && kill -0 $(cat $PID_FILE) >/dev/null 2>&1; then
+            start-stop-daemon --stop --quiet --oknodo --retry 30 --pidfile $PID_FILE
+        else
+            log_warning_msg "rsync daemon not running, attempting to start."
+            rm -f $PID_FILE
+        fi
+        rsync_start
+	;;
+
+  status)
+	status_of_proc -p $PID_FILE "$DAEMON" monitor
+	exit $?	
+	;;
+  *)
+	echo "Usage: /etc/init.d/monitor {start|stop|reload|force-reload|restart|status}"
+	exit 1
+esac
+
+exit 0
