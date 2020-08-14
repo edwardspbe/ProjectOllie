@@ -97,6 +97,7 @@ def do_blink_loop(cycle):
 
 def sendSMSNotification():
     #read on-call data in case this has changed in the background...
+    confdata = []
     with open('/opt/ollie/ollie_at_your_service.conf') as json_data_file:
         confdata = json.load(json_data_file)
     logging.info("service requested..  sending SMS to %s." % confdata['numbers'])
@@ -106,7 +107,7 @@ def sendSMSNotification():
     #message may not include URLs unless we are "whitelisted" by the TextBelt.com guys... 
     #Whitelisted (Jun. 11, 2019) 
     #message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please reconfigure Ollie at: %s' % ip
-    message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please reconfigure Ollie at: http://%s' % ip
+    message = 'Ollie needs help at the Snack Shack.  If you no longer want to be on-call, please connect to SandyBeachLOWER Wifi and reconfigure Ollie at: http://%s' % ip
     for name in confdata['numbers'] :
         answer = requests.post('https://textbelt.com/text', {
                                'phone': confdata['numbers'][name],
@@ -129,6 +130,7 @@ def sendSMSNotification():
 
 def logNotification():
     #read on-call data in case this has changed in the background...
+    confdata = []
     with open('/opt/ollie/ollie_at_your_service.conf') as json_data_file:
         confdata = json.load(json_data_file)
     logging.info("service requested..  logging notification to %s." % confdata['numbers'])
@@ -155,6 +157,7 @@ def s_callbk(pin):
             logging.info("service request while in WAIT-PERIOD.")
             return
 
+    logging.info("service requested... sending notification")
     s_callbk.service_ts = datetime.now()
     #logNotification()
     sendSMSNotification()
@@ -162,7 +165,7 @@ def s_callbk(pin):
 #make sure we are operating properly and LEDs are indicating ready... 
 def check_state():
     if s_callbk.service_ts != None :
-        logging.info("in check_state with service_ts=%s" % s_callbk.service_ts )
+        logging.info("in check_state with last service request at [%s]" % s_callbk.service_ts )
         delta = datetime.now() - s_callbk.service_ts
         if delta.seconds > SmsQuietPeriod :
             logging.info("in check_state: resetting timer..." )
@@ -179,7 +182,7 @@ def check_state():
 
 def main():
   try:
-    logging.basicConfig(format='%(asctime)s %(message)s', filename='ss_not.log', level=logging.INFO)
+    logging.basicConfig(format='%(asctime)s %(message)s', filename='/var/log/ss_not.log', level=logging.INFO)
     #initialize the global timestamps
     s_callbk.service_ts = None    #service timestamp
 

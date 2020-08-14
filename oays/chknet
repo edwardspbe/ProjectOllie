@@ -1,0 +1,30 @@
+#!/bin/bash -x
+
+#check to see if we are already running.  If yes, stop chknet and continue with this one.
+ans=`pgrep chknet`
+for pid in $(pidof -x chknet); do
+    if [ $pid != $$ ]; then
+        echo "[$(date)] : chknet: Process is already running with PID $pid; aborting and restarting"
+        kill -9 $pid
+    fi
+done
+
+cntr=0
+DEFAULT_ROUTE=$(ip route show default | awk '/default/ {print $3}')
+
+while [ 1 ]   #forever...
+do
+    ping -c 1 $DEFAULT_ROUTE
+    if [ $? -eq 1 ]    #cause 1 == no response from ping...
+    then
+        #default router not responding... set counter and restart network after 10 tries.
+        if [ "$cntr" == "10" ] 
+        then
+            #restarting network interface
+            systemctl restart networking
+            cntr=0
+        fi
+        cntr=$((cntr+1))
+    fi
+    sleep 5
+done
