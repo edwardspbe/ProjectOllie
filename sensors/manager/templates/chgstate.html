@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Change Sensor State Page{% endblock %}
+{% block extrahead %}
+<script type="text/javascript">
+function start() {
+}
+function stop() {
+}
+</script>
+{% endblock %}
+{% block content %}
+<form method=POST action="/chgstate" id="chgstate">
+<h2>Change Sensor Configuration</h2>
+<table>
+  <tr><th>Change State</th>
+    <td>
+	{% if status[0] == 1 %}
+	   <input type="submit" formaction="/stop" value="Stop Sensor"><br>
+	{% else %}
+	   <input type="submit" formaction="/start" value="Start Sensor"><br>
+	{% endif %}
+	</td></tr>
+  <tr><th>Change Threshold</th>
+    <td><input type="text" id="threshold" size="5" name="threshold" value="{{ confdata.sensor_threshold }}">Inches</input>
+	</td></tr>
+  <tr><th>Change Notifcation</th>
+    <td><input type="text" id="delay" size="5" name="delay" value="{{ confdata.notif_delay }}">Wait time (minutes) between notifications</input>
+	</td></tr>
+  <tr><th>Notifcation List</th><td>
+    {% for key,val in confdata.numbers.items() %}
+            <input type='checkbox' name='oncall' value='{{ key }}'> {{ key }} - ( {{ val }} )<br>
+    {% endfor %}
+	</td></tr>
+</table>
+<input type="submit" value="Submit">
+</form>
+<hr>
+{% if status %}
+	{{ status[1]|safe }}
+{% endif %}
+{% endblock %}
