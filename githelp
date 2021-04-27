@@ -1,5 +1,12 @@
-# just a list of commands to help me remember the command line interface through examples... 
+#basic checkout, edit, commit and push
+git checkout <file>
+vi ...
+git add <file>
+git commit -m "comment"
+git push
 
+
+# just a list of commands to help me remember the command line interface through examples... 
 git add README.md
 git commit -m "first commit"
 git remote add origin https://github.com/edwardspbe/ProjectOllie.git
