@@ -4,7 +4,7 @@ from lxml import html
 import os
 import json
 
-BASE=os.getcwd()
+BASE='/opt/ollie/monitor'
 conf='/opt/ollie/monitor/ollie_at_your_service.conf'
 
 app = Flask(__name__)
