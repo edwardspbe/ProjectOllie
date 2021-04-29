@@ -110,7 +110,8 @@ def do_every( period, func ):
         if tmpday != day :
             #rotate our log file... 
             outout.close()
-            output = open("{}/monitorlog.{}".format(odir,day), 'a')
+            day = tmpday
+            output = open("{}/monitorlog.{}".format(odir,day), 'w')
             output.write("Date,day,time,cm,inches\n")
 
 
@@ -166,7 +167,7 @@ time.sleep(0.5)
 # the user seeing lots of unnecessary error
 # messages.
 try:  
-    do_every( 15, start_measuring )
+    do_every( 30, start_measuring )
 except KeyboardInterrupt:
     # User pressed CTRL-C
     # Reset GPIO settings
