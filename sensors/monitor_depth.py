@@ -101,7 +101,7 @@ def do_every( period, func ):
         output = open(ofilename, 'a')
     else:
         output = open(ofilename, 'w')
-        output.write("Date,day,time,cm,inches\n")
+        output.write("Date, day, time, cm, inches\n-----------------------------")
     output.flush()
     while True:
         time.sleep(next(g))
@@ -109,10 +109,10 @@ def do_every( period, func ):
         tmpday = datetime.datetime.now().strftime('%Y-%m-%d')
         if tmpday != day :
             #rotate our log file... 
-            outout.close()
+            output.close()
             day = tmpday
             output = open("{}/monitorlog.{}".format(odir,day), 'w')
-            output.write("Date,day,time,cm,inches\n")
+            output.write("Date, day, time, cm, inches\n-----------------------------")
 
 
 ######################################
