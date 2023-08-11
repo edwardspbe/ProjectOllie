@@ -12,11 +12,9 @@ import logging
 ###############################################################################
 # function: test_threshold - will send a notification if a threshold is passed
 #                          - this is limited to once an hour..
-def test_threshold( inches, last_notification):
+def test_threshold( confdata, last_notification):
     confdata = []
     threshold = 0
-    with open('/opt/ollie/monitor/ollie_at_your_service.conf') as json_data_file:
-        confdata = json.load(json_data_file)
     if  confdata['sensor_threshold_units'] == "cm":
         threshold = confdata['sensor_threshold']*toInches
     else :
@@ -62,7 +60,7 @@ def measure():
 #                             period of time as controlled by our caller.
 # measures distance 5 times then calculates the median in case our slow
 # CPU has trouble keeping up... 
-def start_measuring(output, last_notification):
+def start_measuring(output, confdata, last_notification):
     distance = []
     for i in range(0,5):
         mmnt = measure()
@@ -74,7 +72,7 @@ def start_measuring(output, last_notification):
     print("{0},{1:.1f},{2:.1f}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S'), median, median*toInches))
     output.write("{0},{1:.1f},{2:.1f}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S'), median, median*toInches))
     output.flush()
-    return test_threshold( median*toInches, last_notification )
+    return test_threshold( confdata, last_notification )
 
 ###############################################################################
 # function: do_every - nifty routine that uses a generator to track time.  
@@ -82,19 +80,24 @@ def start_measuring(output, last_notification):
 #     Works well cause our measurements only happen once ever 15 seconds. 
 #     more real-time apps will require a fast CPU to do processing fast enough.
 #
-def do_every( period, func ):
-    def g_tick():
+def do_every( func ):
+    def g_tick(period):
         t = time.time()
         while True:
             t += period
             yield max(t - time.time(),0)
     
+    #get configuration data
+    with open('/opt/ollie/monitor/ollie_at_your_service.conf') as json_data_file:
+        confdata = json.load(json_data_file)
+
     #initialized last notification to start time. this means we won't send one 
     #for at least an hour after starting. 
     last_notification = datetime.datetime.today()  
 
-    g = g_tick()
+    g = g_tick(confdata['measurement_frequency'])
     day = datetime.datetime.now().strftime('%Y-%m-%d')
+
     #open our log file... it will be checked for rotation later
     ofilename = "{}/monitorlog.{}".format(odir,day)
     if os.path.exists(ofilename) :
@@ -103,9 +106,13 @@ def do_every( period, func ):
         output = open(ofilename, 'w')
         output.write("Date, day, time, cm, inches\n-----------------------------")
     output.flush()
+    
+    #endlessly retry and log our measurements... 
     while True:
         time.sleep(next(g))
-        last_notification = func(output, last_notification)
+        with open('/opt/ollie/monitor/ollie_at_your_service.conf') as json_data_file:
+            confdata = json.load(json_data_file)
+        last_notification = func(output, confdata, last_notification)
         tmpday = datetime.datetime.now().strftime('%Y-%m-%d')
         if tmpday != day :
             #rotate our log file... 
@@ -115,12 +122,15 @@ def do_every( period, func ):
             output.write("Date, day, time, cm, inches\n-----------------------------")
 
 
+
 ######################################
 #Main program starts here
 
-# Speed of sound in cm/s at temperature (TODO: add temp sensor to project)
-temperature = 10 
-speedSoundCm = 34300 + (0.6*temperature)
+#Read all configuration data used by project
+#(TODO: add temp sensor to project)
+with open('/opt/ollie/monitor/ollie_at_your_service.conf') as json_data_file:
+    confdata = json.load(json_data_file)
+speedSoundCm = confdata['speed_of_sound'] + (0.6 * confdata['ambient_temperature'])
 toInches=0.3937
 odir="/opt/ollie/monitor/log"
 
@@ -143,7 +153,7 @@ with open(pidfile, 'a') as output:
     output.write(pid)
 
 print("Ultrasonic Measurements: Upper tank")
-print("Speed of sound is {:.1f} cm/s, assuming {} degrees C.".format(speedSoundCm, temperature))
+print("Speed of sound is {:.1f} cm/s, assuming {} degrees C.".format(speedSoundCm, confdata['ambient_temperature']))
 print("    o NOTE: output can be found in {}".format(odir))
 
 # Set pins as output and input
@@ -167,7 +177,7 @@ time.sleep(0.5)
 # the user seeing lots of unnecessary error
 # messages.
 try:  
-    do_every( 30, start_measuring )
+    do_every( start_measuring )
 except KeyboardInterrupt:
     # User pressed CTRL-C
     # Reset GPIO settings
