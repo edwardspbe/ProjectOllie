@@ -3,7 +3,8 @@
 DDIR="/opt/ollie/monitor"
 if [ ! -d $DDIR ] ; then mkdir -p $DDIR; fi
 cp ./monitor_depth.py $DDIR/
-cp ./manager/manage_sensor.py $DDIR/
+#cp ./manager/manage_sensor.py $DDIR/
+cp ./manager/manage_float.py $DDIR/
 cp ./manager/state.bash $DDIR/
 cp ./manager/favicon.ico $DDIR/
 cp ./manager/status.bash $DDIR/
@@ -13,8 +14,10 @@ mkdir $DDIR/log
 
 #enable and start the services
 cp ./monitor_depth.service /lib/systemd/system/monitor_depth.service 
-sudo systemctl enable monitor_depth.service
-sudo systemctl start monitor_depth.service
+#sudo systemctl enable monitor_depth.service
+#sudo systemctl start monitor_depth.service
+sudo systemctl enable monitor_float.service
+sudo systemctl start monitor_float.service
 
 cp ./manager/manage_sensor.service /lib/systemd/system/manage_sensor.service 
 sudo systemctl enable manage_sensor.service
