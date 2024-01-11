@@ -15,8 +15,9 @@ import logging
 def dbg_send_notification( confdata, last_notification, force):
     timenow = datetime.datetime.today()
     deltatime = timenow - datetime.timedelta(minutes=int(confdata['notif_delay']))
-    print("deltatime: %s, last: %s, forced notification: %d" % (deltatime, last_notification, force))
-    if deltatime > last_notification or force:    #send notification (once per hour)
+    print("Notification: deltatime: %s, last: %s, forced notification: %d" % (deltatime, last_notification, force))
+    #send notification (once per period as configured) unless we are forcing the 
+    if deltatime > last_notification or force:    
         print("service requested..  sending SMS to %s." % confdata['numbers'])
         last_notification = timenow
     return last_notification
@@ -25,7 +26,7 @@ def dbg_send_notification( confdata, last_notification, force):
 def send_notification( confdata, last_notification, force):
     timenow = datetime.datetime.today()
     deltatime = timenow - datetime.timedelta(minutes=int(confdata['notif_delay']))
-    print("deltatime: %s, last: %s, forced notification: %d" % (deltatime, last_notification, force))
+    print("Notification: deltatime: %s, last: %s, forced notification: %d" % (deltatime, last_notification, force))
     if deltatime > last_notification or force:    #send notification (once per hour)
         print("service requested..  sending SMS to %s." % confdata['numbers'])
         ip = os.popen("ip -4 a show wlan0 | grep inet | awk '{print $2}' | cut -d'/' -f1").read()
@@ -72,20 +73,21 @@ def start_monitoring(output, confdata, last_notification):
         GPIO.output(GPIO_OUT_1,GPIO.LOW)
     if (f_hi != start_monitoring.f_hi_state) or (f_low != start_monitoring.f_low_state) or \
                                                 (pump != start_monitoring.pump_state):
-        print("State change: {0},{1},{2},{3}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S'), f_hi, f_low, pump))
+        print("State change: {0},{1},{2},{3}, {4},{5},{6}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S'), \
+                f_hi, f_low, pump, start_monitoring.f_hi_state, start_monitoring.f_low_state, start_monitoring.pump_state))
         output.write("{0},{1},{2},{3}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S'), f_hi, f_low, pump))
         output.flush()
 
     #send notification if high float alarm or change in high float alarm
     if f_hi == ON:
-        last_notification = dbg_send_notification(confdata, last_notification, False)
+        last_notification = send_notification(confdata, last_notification, False)
     if f_hi == OFF and f_hi != start_monitoring.f_hi_state :
-        last_notification = dbg_send_notification(confdata, last_notification, True)
+        last_notification = send_notification(confdata, last_notification, True)
 
     #set the current state so we can monitor for change going forward.
-    f_hi_state = f_hi
-    f_low_state = f_low
-    pump_state = pump
+    start_monitoring.f_hi_state = f_hi
+    start_monitoring.f_low_state = f_low
+    start_monitoring.pump_state = pump
     return last_notification
 
 ###############################################################################
@@ -105,7 +107,9 @@ def do_every( func ):
 
     #initialized last notification to start time. this means we won't send one 
     #for at least an hour after starting. 
-    last_notification = datetime.datetime.today()  
+    #last_notification = datetime.datetime.today()  
+    #lets fire an alarm if appropriate on startup...
+    last_notification = datetime.datetime.today() - datetime.timedelta(minutes=int(confdata['notif_delay']))
 
     g = g_tick(confdata['float_measurement_frequency'])
     day = datetime.datetime.now().strftime('%Y-%m-%d')
@@ -168,8 +172,8 @@ print("  o NOTE: output can be found in {}".format(odir))
 # Define GPIO to use for input
 # aligning as:  f_hi, f_low, pump = checkstate(return one,two,three)
 GPIO_IN_1 = 17  #f_hi
-GPIO_IN_2 = 23  #f_low
-GPIO_IN_3 = 22  #pump
+GPIO_IN_2 = 22  #f_low
+GPIO_IN_3 = 23  #pump
 #optoisolator is NC (normally closed) returning (1) for off and (0) for on
 ON = 0
 OFF = 1
@@ -178,9 +182,9 @@ start_monitoring.f_hi_state = OFF
 start_monitoring.f_low_state = OFF
 start_monitoring.pump_state = OFF
 
-GPIO_OUT_1 = 16
-GPIO_OUT_2 = 20
-GPIO_OUT_3 = 21
+GPIO_OUT_1 = 16 #f_hi indicator
+GPIO_OUT_2 = 20 #f_low indicator
+GPIO_OUT_3 = 21 #pump indicator
 
 # Use BCM (Broadcom) GPIO references instead of physical pin numbers 
 GPIO.setmode(GPIO.BCM)  #vs.  GPIO.setmode(GPIO.BOARD)
