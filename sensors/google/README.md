@@ -1,26 +1,14 @@
-Data collected by sensor to be moved to our Google Drive
-Filename: pumpstatus.csv
+Notes on "copy to Google drive" routine and exercise to get this working with OAUTH2
 
-Content: periodic state of; pump (ON|OFF), LowFloat (ON|OFF), HIGHFLOAT (ON|OFF)
-example:  date, time, <pstate>, <lfstate>, <hfstate>
-
-Content2: state change notifications
-example: date, time, <object> <oldstate> <newstate> 
-
-Why are we collecting two types of data? 
-... what if our monitor fails?
-... what if our system isn't being used?
-... we need to get notifications should things stop working or at the 
-....... very least, if states stop changing.
-
-TODO: Another option would be to input and track the programmable timed 
-... dosage state changes.  When our sensor doesn't see the timing changes
-... expected, then a notification could be triggered.  We would still need
-... to track the state changes though so we understand how much we are 
-... pumping.
+Script: quickstart.py
+Original program comes from google examples; first file used to quickly listing 
+files on your "drive", second used to MediaFileUpload() a file to the drive.
+1. first file used OAUTH2, with read_only scope. 
+2. second used "default" authentication (didn't implement), but uses local hidden
+   file with default google drive creds.
 
 Notes about Google drive file access... 
 SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 ... allows full access to files only when setting up OAUTH2 access token
 ...... used for credentials when building service access.
-
+... important to use the correct mediatype and scope

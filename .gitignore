@@ -5,3 +5,4 @@ config
 sensors/google/credentials.json
 sensors/google/token.json
 sensors/google/token.json.readonly
+sensors/google/photo.jpg
