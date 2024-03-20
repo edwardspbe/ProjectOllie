@@ -5,6 +5,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from googleapiclient.http import MediaFileUpload
 
 # If modifying these scopes, delete the file token.json.
 #SCOPES = ["https://www.googleapis.com/auth/drive.metadata.readonly"]
@@ -37,23 +38,22 @@ def main():
   try:
     service = build("drive", "v3", credentials=creds)
 
-    # Call the Drive v3 API
-    results = (
+    file_metadata = {"name": "photo.jpg"}
+    media = MediaFileUpload("photo.jpg", mimetype="image/jpeg")
+    # pylint: disable=maybe-no-member
+    file = (
         service.files()
-        .list(pageSize=10, fields="nextPageToken, files(id, name)")
+        .create(body=file_metadata, media_body=media, fields="id")
         .execute()
     )
-    items = results.get("files", [])
+    print(f'File ID: {file.get("id")}')
 
-    if not items:
-      print("No files found.")
-      return
-    print("Files:")
-    for item in items:
-      print(f"{item['name']} ({item['id']})")
   except HttpError as error:
-    # TODO(developer) - Handle errors from drive API.
     print(f"An error occurred: {error}")
+    file = None
+
+  return 
+
 
 
 if __name__ == "__main__":
