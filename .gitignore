@@ -2,3 +2,6 @@ oays/oays_all.conf
 oays/ollie_at_your_service.conf
 ss_not.log
 config
+sensors/google/credentials.json
+sensors/google/token.json
+sensors/google/token.json.readonly
