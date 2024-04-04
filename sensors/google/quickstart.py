@@ -38,8 +38,8 @@ def main():
   try:
     service = build("drive", "v3", credentials=creds)
 
-    file_metadata = {"name": "photo.jpg"}
-    media = MediaFileUpload("photo.jpg", mimetype="image/jpeg")
+    file_metadata = {"name": "garage.png"}
+    media = MediaFileUpload("garage.png", mimetype="image/png")
     # pylint: disable=maybe-no-member
     file = (
         service.files()
