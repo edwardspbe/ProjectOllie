@@ -1,0 +1,4 @@
+#!/bin/bash 
+tunnel=`curl -s http://localhost:4040/api/tunnels/ | python -m json.tool | grep public_url | cut -d\" -f4`
+echo "tunnel: $tunnel"
+

@@ -1,0 +1,7 @@
+#!/bin/bash 
+tunnel=`curl -s http://localhost:4040/api/tunnels/ | python -m json.tool | grep public_url | cut -d\" -f4`
+#example output...   tcp://0.tcp.ngrok.io:13679
+IFS=: read -r node port <<< $( echo ${tunnel:6})
+echo "NODE: $node"
+echo "Port: $port"
+
