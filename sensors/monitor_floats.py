@@ -7,7 +7,60 @@ import signal
 import requests
 import json
 import logging
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from googleapiclient.http import MediaFileUpload
 
+# If modifying these scopes, delete the file token.json.
+#SCOPES = ["https://www.googleapis.com/auth/drive.metadata.readonly"]
+SCOPES = ["https://www.googleapis.com/auth/drive.file"]
+
+################################################################################
+# function: move_to_GDrive  - copyies a file to google drive location
+#
+def move_to_GDrive( f1 ):
+  """Shows basic usage of the Drive v3 API.
+  Prints the names and ids of the first 10 files the user has access to.
+  """
+  creds = None
+  # The file token.json stores the user's access and refresh tokens, and is
+  # created automatically when the authorization flow completes for the first
+  # time.
+  if os.path.exists("token.json"):
+    creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+  # If there are no (valid) credentials available, let the user log in.
+  if not creds or not creds.valid:
+    if creds and creds.expired and creds.refresh_token:
+      creds.refresh(Request())
+    else:
+      flow = InstalledAppFlow.from_client_secrets_file(
+          "credentials.json", SCOPES
+      )
+      creds = flow.run_local_server(port=0)
+    # Save the credentials for the next run
+    with open("token.json", "w") as token:
+      token.write(creds.to_json())
+
+  try:
+    service = build("drive", "v3", credentials=creds)
+
+    file_metadata = {"name": f1 }
+    media = MediaFileUpload(f1, mimetype="txt")
+    file = (
+        service.files()
+        .create(body=file_metadata, media_body=media, fields="id")
+        .execute()
+    )
+    print(f'File ID: {file.get("id")}')
+
+  except HttpError as error:
+    print(f"An error occurred: {error}")
+    file = None
+
+  return 
 
 ################################################################################
 # function: send_notification - will send a notification if last notification 
@@ -52,13 +105,16 @@ def checkstate():
 ###############################################################################
 # function: start_monitoring - hanlder used to do the check state of each line
 #                  once every period of time as controlled by our caller.
-def start_monitoring(output, confdata, last_notification):
+# outputs are for float state changes(time) and pump on/off times
+#
+def start_monitoring(f_output, p_output, confdata, last_notification):
     start_monitoring.f_hi_state
     start_monitoring.f_low_state 
     start_monitoring.pump_state
     now = datetime.datetime.now()
     f_hi, f_low, pump = checkstate()
         
+    #set visual indicators
     if f_hi == ON:
         GPIO.output(GPIO_OUT_3,GPIO.HIGH)
     else:
@@ -71,18 +127,31 @@ def start_monitoring(output, confdata, last_notification):
         GPIO.output(GPIO_OUT_1,GPIO.HIGH)
     else:
         GPIO.output(GPIO_OUT_1,GPIO.LOW)
+    
+    #if any state change, log it... 
     if (f_hi != start_monitoring.f_hi_state) or (f_low != start_monitoring.f_low_state) or \
                                                 (pump != start_monitoring.pump_state):
         print("State change: {0},{1},{2},{3}, {4},{5},{6}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S'), \
                 f_hi, f_low, pump, start_monitoring.f_hi_state, start_monitoring.f_low_state, start_monitoring.pump_state))
-        output.write("{0},{1},{2},{3}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S'), f_hi, f_low, pump))
-        output.flush()
+        f_output.write("{0},{1},{2},{3}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S'), f_hi, f_low, pump))
+        f_output.flush()
 
     #send notification if high float alarm or change in high float alarm
     if f_hi == ON:
         last_notification = send_notification(confdata, last_notification, False)
     if f_hi == OFF and f_hi != start_monitoring.f_hi_state :
         last_notification = send_notification(confdata, last_notification, True)
+    
+    #track and log time pump is on
+    if (pump == ON) and (start_monitoring.pump_start_time == 0) :
+        #log pump on time
+        start_monitoring.pump_start_time = 1
+        p_output.write("State: ON, {}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
+    else:
+        #log pump off time
+        p_output.write("State: OFF, {}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
+        start_monitoring.pump_start_time = 0
+        
 
     #set the current state so we can monitor for change going forward.
     start_monitoring.f_hi_state = f_hi
@@ -115,29 +184,43 @@ def do_every( func ):
     day = datetime.datetime.now().strftime('%Y-%m-%d')
 
     #open our log file... it will be checked for rotation later
-    ofilename = "{}/floatlog.{}".format(odir,day)
-    if os.path.exists(ofilename) :
-        output = open(ofilename, 'a')
+    ffilename = "{}/floatlog.{}".format(odir,day)
+    pfilename = "{}/pumplog.{}".format(odir,day)
+    if os.path.exists(ffilename) :
+        f_output = open(ffilename, 'a')
     else:
-        output = open(ofilename, 'w')
-        output.write("Date, day, time, line, state\n----------------------------\n")
-    output.flush()
+        f_output = open(ffilename, 'w')
+        f_output.write("Date, day, time, line, state\n----------------------------\n")
+    f_output.flush()
+    if os.path.exists(pfilename) :
+        p_output = open(pfilename, 'a')
+    else:
+        p_output = open(pfilename, 'w')
+        p_output.write("Pump state changes\n----------------------------\n")
+    p_output.flush()
     
     #endlessly retry and log our measurements... 
     while True:
         time.sleep(next(g))
-        last_notification = func(output, confdata, last_notification)
+        last_notification = func(f_output, p_output, confdata, last_notification)
         tmpday = datetime.datetime.now().strftime('%Y-%m-%d')
         if tmpday != day :
             #rotate our log file
             #... but first re-read configuration just in case things have changed... 
             with open('/opt/ollie/monitor/ollie_at_your_service.conf') as json_data_file:
                 confdata = json.load(json_data_file)
-            output.close()
-            day = tmpday
-            output = open("{}/floatlog.{}".format(odir,day), 'w')
-            output.write("Date, day, time, line, state\n----------------------------\n")
+            f_output.close()
+            p_output.close()
+            #move output files to google drive
+            move_to_GDrive( ffilename )
+            move_to_GDrive( pfilename )
 
+            #progress with 
+            day = tmpday
+            f_output = open(ffilename, 'w')
+            f_output.write("Date, day, time, line, state\n----------------------------\n")
+            p_output = open(pfilename, 'w')
+            p_output.write("Pump state changes\n----------------------------\n")
 
 
 ######################################
@@ -181,6 +264,7 @@ OFF = 1
 start_monitoring.f_hi_state = OFF
 start_monitoring.f_low_state = OFF
 start_monitoring.pump_state = OFF
+start_monitoring.pump_start_time = 0
 
 GPIO_OUT_1 = 16 #f_hi indicator
 GPIO_OUT_2 = 20 #f_low indicator
@@ -219,5 +303,6 @@ except KeyboardInterrupt:
 if os.path.isfile(pidfile) :
     os.remove(pidfile)
 print("Monitoring Terminated!")
+
 
 

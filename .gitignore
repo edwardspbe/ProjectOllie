@@ -2,7 +2,10 @@ oays/oays_all.conf
 oays/ollie_at_your_service.conf
 ss_not.log
 config
+sensors/ollie_at_your_service.conf
 sensors/google/credentials.json
 sensors/google/token.json
+sensors/credentials.json
+sensors/token.json
 sensors/google/token.json.readonly
 sensors/google/photo.jpg

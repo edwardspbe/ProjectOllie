@@ -1,4 +1,8 @@
-#basic checkout, edit, commit and push
+#update...
+# credentials are now based on personal access tokens and can be found
+# at;   ~/.git-credentials
+#
+##basic checkout, edit, commit and push
 git checkout <file>
 vi ...
 git add <file>
