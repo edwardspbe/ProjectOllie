@@ -26,6 +26,10 @@ def move_to_GDrive( f1 ):
   Prints the names and ids of the first 10 files the user has access to.
   """
   creds = None
+  
+  #Google drive subdirectory where files are stored
+  #ddir="MyPiDrive"
+
   # The file token.json stores the user's access and refresh tokens, and is
   # created automatically when the authorization flow completes for the first
   # time.
@@ -47,6 +51,7 @@ def move_to_GDrive( f1 ):
   try:
     service = build("drive", "v3", credentials=creds)
 
+    #cfile = "%s/%s" % (ddir, f1)
     file_metadata = {"name": f1 }
     media = MediaFileUpload(f1, mimetype="txt")
     file = (
