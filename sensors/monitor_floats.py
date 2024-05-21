@@ -53,7 +53,7 @@ def move_to_GDrive( f1 ):
 
     #cfile = "%s/%s" % (ddir, f1)
     file_metadata = {"name": f1 }
-    media = MediaFileUpload(f1, mimetype="txt")
+    media = MediaFileUpload(f1, mimetype="test/plain")
     file = (
         service.files()
         .create(body=file_metadata, media_body=media, fields="id")
@@ -136,10 +136,9 @@ def start_monitoring(f_output, p_output, confdata, last_notification):
     #if any state change, log it... 
     if (f_hi != start_monitoring.f_hi_state) or (f_low != start_monitoring.f_low_state) or \
                                                 (pump != start_monitoring.pump_state):
-        print("State change: {0},{1},{2},{3}, {4},{5},{6}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S'), \
+        print("State change: {0}, {1}, {2}, {3}, {4}, {5}, {6}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S'), \
                 f_hi, f_low, pump, start_monitoring.f_hi_state, start_monitoring.f_low_state, start_monitoring.pump_state))
-        f_output.write("{0},{1},{2},{3}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S'), f_hi, f_low, pump))
-        f_output.flush()
+        f_output.write("{0}, {1}, {2}, {3}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S'), f_hi, f_low, pump))
 
     #send notification if high float alarm or change in high float alarm
     if f_hi == ON:
@@ -151,10 +150,12 @@ def start_monitoring(f_output, p_output, confdata, last_notification):
     if (pump == ON) and (start_monitoring.pump_start_time == 0) :
         #log pump on time
         start_monitoring.pump_start_time = 1
+        print("State: ON, {}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
         p_output.write("State: ON, {}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
-    else:
+    if (pump == OFF) and (start_monitoring.pump_start_time == 1) :
         #log pump off time
         p_output.write("State: OFF, {}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
+        print("State: OFF, {}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
         start_monitoring.pump_start_time = 0
         
 
@@ -162,6 +163,8 @@ def start_monitoring(f_output, p_output, confdata, last_notification):
     start_monitoring.f_hi_state = f_hi
     start_monitoring.f_low_state = f_low
     start_monitoring.pump_state = pump
+    f_output.flush()
+    p_output.flush()
     return last_notification
 
 ###############################################################################
@@ -195,7 +198,7 @@ def do_every( func ):
         f_output = open(ffilename, 'a')
     else:
         f_output = open(ffilename, 'w')
-        f_output.write("Date, day, time, line, state\n----------------------------\n")
+        f_output.write("Date, day, time, line, state(hi,lo,pump)\n----------------------------------------\n")
     f_output.flush()
     if os.path.exists(pfilename) :
         p_output = open(pfilename, 'a')
@@ -216,6 +219,11 @@ def do_every( func ):
                 confdata = json.load(json_data_file)
             f_output.close()
             p_output.close()
+
+            #make backup of current files...
+            os.system("cp {} {}/backup/floatlog.{}".format(ffilename, odir, day) )
+            os.system("cp {} {}/backup/pumplog.{}".format(pfilename, odir, day) )
+
             #move output files to google drive
             move_to_GDrive( ffilename )
             move_to_GDrive( pfilename )
@@ -223,9 +231,11 @@ def do_every( func ):
             #progress with 
             day = tmpday
             f_output = open(ffilename, 'w')
-            f_output.write("Date, day, time, line, state\n----------------------------\n")
+            f_output.write("Date, day, time, line, state(hi,lo,pump)\n----------------------------------------\n")
+            f_output.flush()
             p_output = open(pfilename, 'w')
             p_output.write("Pump state changes\n----------------------------\n")
+            p_output.flush()
 
 
 ######################################
