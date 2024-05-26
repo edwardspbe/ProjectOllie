@@ -118,20 +118,21 @@ def start_monitoring(f_output, p_output, confdata, last_notification):
     start_monitoring.pump_state
     now = datetime.datetime.now()
     f_hi, f_low, pump = checkstate()
+    print("hi: %s, low: %s, pump: %s" % (f_hi, f_low, pump))
         
     #set visual indicators
     if f_hi == ON:
-        GPIO.output(GPIO_OUT_3,GPIO.HIGH)
+        GPIO.output(GPIO_OUT_HI,GPIO.HIGH)
     else:
-        GPIO.output(GPIO_OUT_3,GPIO.LOW)
+        GPIO.output(GPIO_OUT_HI,GPIO.LOW)
     if f_low == ON:
-        GPIO.output(GPIO_OUT_2,GPIO.HIGH)
+        GPIO.output(GPIO_OUT_LOW,GPIO.HIGH)
     else:
-        GPIO.output(GPIO_OUT_2,GPIO.LOW)
+        GPIO.output(GPIO_OUT_LOW,GPIO.LOW)
     if pump == ON:
-        GPIO.output(GPIO_OUT_1,GPIO.HIGH)
+        GPIO.output(GPIO_OUT_PUMP,GPIO.HIGH)
     else:
-        GPIO.output(GPIO_OUT_1,GPIO.LOW)
+        GPIO.output(GPIO_OUT_PUMP,GPIO.LOW)
     
     #if any state change, log it... 
     if (f_hi != start_monitoring.f_hi_state) or (f_low != start_monitoring.f_low_state) or \
@@ -281,9 +282,9 @@ start_monitoring.f_low_state = OFF
 start_monitoring.pump_state = OFF
 start_monitoring.pump_start_time = 0
 
-GPIO_OUT_1 = 16 #f_hi indicator
-GPIO_OUT_2 = 20 #f_low indicator
-GPIO_OUT_3 = 21 #pump indicator
+GPIO_OUT_HI = 21   #f_hi indicator
+GPIO_OUT_LOW = 20  #f_low indicator
+GPIO_OUT_PUMP = 16 #pump indicator
 
 # Use BCM (Broadcom) GPIO references instead of physical pin numbers 
 GPIO.setmode(GPIO.BCM)  #vs.  GPIO.setmode(GPIO.BOARD)
@@ -294,12 +295,12 @@ GPIO.setup(GPIO_IN_2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(GPIO_IN_3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 #initialize output pins (controlling LED indicators)
-GPIO.setup(GPIO_OUT_1, GPIO.OUT) 
-GPIO.setup(GPIO_OUT_2, GPIO.OUT) 
-GPIO.setup(GPIO_OUT_3, GPIO.OUT) 
-GPIO.output(GPIO_OUT_1, GPIO.LOW)
-GPIO.output(GPIO_OUT_2, GPIO.LOW)
-GPIO.output(GPIO_OUT_3, GPIO.LOW)
+GPIO.setup(GPIO_OUT_HI, GPIO.OUT) 
+GPIO.setup(GPIO_OUT_LOW, GPIO.OUT) 
+GPIO.setup(GPIO_OUT_PUMP, GPIO.OUT) 
+GPIO.output(GPIO_OUT_HI, GPIO.LOW)
+GPIO.output(GPIO_OUT_LOW, GPIO.LOW)
+GPIO.output(GPIO_OUT_PUMP, GPIO.LOW)
 
 # Allow module to settle
 time.sleep(0.5)
