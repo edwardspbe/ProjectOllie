@@ -53,7 +53,7 @@ def move_to_GDrive( f1 ):
 
     #cfile = "%s/%s" % (ddir, f1)
     file_metadata = {"name": f1 }
-    media = MediaFileUpload(f1, mimetype="test/plain")
+    media = MediaFileUpload(f1, mimetype="text/plain")
     file = (
         service.files()
         .create(body=file_metadata, media_body=media, fields="id")
