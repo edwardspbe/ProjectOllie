@@ -33,19 +33,20 @@ def move_to_GDrive( f1 ):
   # The file token.json stores the user's access and refresh tokens, and is
   # created automatically when the authorization flow completes for the first
   # time.
-  if os.path.exists("token.json"):
-    creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+  token = "%s/token.json" % rdir
+  if os.path.exists(token):
+    creds = Credentials.from_authorized_user_file(token, SCOPES)
   # If there are no (valid) credentials available, let the user log in.
   if not creds or not creds.valid:
     if creds and creds.expired and creds.refresh_token:
       creds.refresh(Request())
     else:
       flow = InstalledAppFlow.from_client_secrets_file(
-          "credentials.json", SCOPES
+          "%s/credentials.json" % rdir, SCOPES
       )
       creds = flow.run_local_server(port=0)
     # Save the credentials for the next run
-    with open("token.json", "w") as token:
+    with open(token, "w") as token:
       token.write(creds.to_json())
 
   try:
@@ -73,19 +74,19 @@ def move_to_GDrive( f1 ):
 def dbg_send_notification( confdata, last_notification, force):
     timenow = datetime.datetime.today()
     deltatime = timenow - datetime.timedelta(minutes=int(confdata['notif_delay']))
-    print("Notification: deltatime: %s, last: %s, forced notification: %d" % (deltatime, last_notification, force))
+    print("Notification: deltatime: %s, last: %s, forced notification: %d" % (deltatime, next_notification, force))
     #send notification (once per period as configured) unless we are forcing the 
-    if deltatime > last_notification or force:    
+    if deltatime > next_notification or force:    
         print("service requested..  sending SMS to %s." % confdata['numbers'])
-        last_notification = timenow
-    return last_notification
+        next_notification = timenow
+    return next_notification
 
 
-def send_notification( confdata, last_notification, force):
+def send_notification( confdata, next_notification, force):
     timenow = datetime.datetime.today()
     deltatime = timenow - datetime.timedelta(minutes=int(confdata['notif_delay']))
-    print("Notification: deltatime: %s, last: %s, forced notification: %d" % (deltatime, last_notification, force))
-    if deltatime > last_notification or force:    #send notification (once per hour)
+    print("Notification: deltatime: %s, last: %s, forced notification: %d" % (deltatime, next_notification, force))
+    if deltatime > next_notification or force:    #send notification (once per hour)
         print("service requested..  sending SMS to %s." % confdata['numbers'])
         ip = os.popen("ip -4 a show wlan0 | grep inet | awk '{print $2}' | cut -d'/' -f1").read()
         message = 'Ollie needs help... %s.  See http://%s' % (confdata['float_warning'],ip)
@@ -96,8 +97,8 @@ def send_notification( confdata, last_notification, force):
                                    'key': confdata['TextBelt']['key'],
             })
             print("SMS sent to %s" % name)
-        last_notification = timenow
-    return last_notification
+        next_notification = timenow
+    return next_notification
 
 ###############################################################################
 # function: checkstate - returns the state of our 3 inputs... 
@@ -112,13 +113,14 @@ def checkstate():
 #                  once every period of time as controlled by our caller.
 # outputs are for float state changes(time) and pump on/off times
 #
-def start_monitoring(f_output, p_output, confdata, last_notification):
+def start_monitoring(f_output, p_output, confdata, next_notification):
     start_monitoring.f_hi_state
     start_monitoring.f_low_state 
     start_monitoring.pump_state
     now = datetime.datetime.now()
     f_hi, f_low, pump = checkstate()
-    print("hi: %s, low: %s, pump: %s" % (f_hi, f_low, pump))
+    #if f_hi == 0 or f_low == 0 or pump == 0:
+    #    print("hi: %s, low: %s, pump: %s" % (f_hi, f_low, pump))
         
     #set visual indicators
     if f_hi == ON:
@@ -143,9 +145,9 @@ def start_monitoring(f_output, p_output, confdata, last_notification):
 
     #send notification if high float alarm or change in high float alarm
     if f_hi == ON:
-        last_notification = send_notification(confdata, last_notification, False)
+        next_notification = dbg_send_notification(confdata, next_notification, False)
     if f_hi == OFF and f_hi != start_monitoring.f_hi_state :
-        last_notification = send_notification(confdata, last_notification, True)
+        next_notification = dbg_send_notification(confdata, next_notification, True)
     
     #track and log time pump is on
     if (pump == ON) and (start_monitoring.pump_start_time == 0) :
@@ -166,7 +168,7 @@ def start_monitoring(f_output, p_output, confdata, last_notification):
     start_monitoring.pump_state = pump
     f_output.flush()
     p_output.flush()
-    return last_notification
+    return next_notification
 
 ###############################################################################
 # function: do_every - nifty routine that uses a generator to track time.  
@@ -185,9 +187,9 @@ def do_every( func ):
 
     #initialized last notification to start time. this means we won't send one 
     #for at least an hour after starting. 
-    #last_notification = datetime.datetime.today()  
+    #next_notification = datetime.datetime.today()  
     #lets fire an alarm if appropriate on startup...
-    last_notification = datetime.datetime.today() - datetime.timedelta(minutes=int(confdata['notif_delay']))
+    next_notification = datetime.datetime.today() - datetime.timedelta(minutes=int(confdata['notif_delay']))
 
     g = g_tick(confdata['float_measurement_frequency'])
     day = datetime.datetime.now().strftime('%Y-%m-%d')
@@ -211,7 +213,7 @@ def do_every( func ):
     #endlessly retry and log our measurements... 
     while True:
         time.sleep(next(g))
-        last_notification = func(f_output, p_output, confdata, last_notification)
+        next_notification = func(f_output, p_output, confdata, next_notification)
         tmpday = datetime.datetime.now().strftime('%Y-%m-%d')
         if tmpday != day :
             #rotate our log file
@@ -245,6 +247,7 @@ def do_every( func ):
 with open('/opt/ollie/monitor/ollie_at_your_service.conf') as json_data_file:
     confdata = json.load(json_data_file)
 odir = confdata['logdir']
+rdir = confdata['rundir']
 
 # - prior to starting, let's see if we are already running. 
 #   if running, stop existing process and start fresh
