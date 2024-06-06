@@ -69,36 +69,28 @@ def move_to_GDrive( f1 ):
   return 
 
 ################################################################################
-# function: send_notification - will send a notification if last notification 
-#                               time has exceeded threshold.
-def dbg_send_notification( confdata, last_notification, force):
-    timenow = datetime.datetime.today()
-    deltatime = timenow - datetime.timedelta(minutes=int(confdata['notif_delay']))
-    print("Notification: deltatime: %s, last: %s, forced notification: %d" % (deltatime, next_notification, force))
-    #send notification (once per period as configured) unless we are forcing the 
-    if deltatime > next_notification or force:    
-        print("service requested..  sending SMS to %s." % confdata['numbers'])
-        next_notification = timenow
-    return next_notification
-
-
-def send_notification( confdata, next_notification, force):
-    timenow = datetime.datetime.today()
-    deltatime = timenow - datetime.timedelta(minutes=int(confdata['notif_delay']))
-    print("Notification: deltatime: %s, last: %s, forced notification: %d" % (deltatime, next_notification, force))
-    if deltatime > next_notification or force:    #send notification (once per hour)
-        print("service requested..  sending SMS to %s." % confdata['numbers'])
-        ip = os.popen("ip -4 a show wlan0 | grep inet | awk '{print $2}' | cut -d'/' -f1").read()
+# function: send_notification - will send a notification 
+DEBUG = True
+if DEBUG :
+  def send_notification( confdata, state ):
+    print("Notification: last: %s, Alarm state: %d" % (monitor.next_notification, state))
+    return
+else :
+  def send_notification( confdata, state ):
+    print("service requested..  sending SMS to %s." % confdata['numbers'])
+    ip = os.popen("ip -4 a show wlan0 | grep inet | awk '{print $2}' | cut -d'/' -f1").read()
+    if state == monitor.ON :
         message = 'Ollie needs help... %s.  See http://%s' % (confdata['float_warning'],ip)
-        for name in confdata['numbers'] :
-            answer = requests.post('https://textbelt.com/text', {
-                                   'phone': confdata['numbers'][name],
-                                   'message': message,
-                                   'key': confdata['TextBelt']['key'],
-            })
-            print("SMS sent to %s" % name)
-        next_notification = timenow
-    return next_notification
+    else :
+        message = 'Ollie\'s HI alarm now off... See http://%s' % (ip)
+    for name in confdata['numbers'] :
+        answer = requests.post('https://textbelt.com/text', {
+                               'phone': confdata['numbers'][name],
+                               'message': message,
+                               'key': confdata['TextBelt']['key'],
+        })
+        print("SMS sent to %s" % name)
+    return 
 
 ###############################################################################
 # function: checkstate - returns the state of our 3 inputs... 
@@ -109,71 +101,73 @@ def checkstate():
   return one, two, three
 
 ###############################################################################
-# function: start_monitoring - hanlder used to do the check state of each line
+# function: start_monitor - hanlder used to do the check state of each line
 #                  once every period of time as controlled by our caller.
 # outputs are for float state changes(time) and pump on/off times
 #
-def start_monitoring(f_output, p_output, confdata, next_notification):
-    start_monitoring.f_hi_state
-    start_monitoring.f_low_state 
-    start_monitoring.pump_state
+def start_monitor(f_output, p_output, confdata, monitor):
     now = datetime.datetime.now()
     f_hi, f_low, pump = checkstate()
-    #if f_hi == 0 or f_low == 0 or pump == 0:
-    #    print("hi: %s, low: %s, pump: %s" % (f_hi, f_low, pump))
         
     #set visual indicators
-    if f_hi == ON:
+    if f_hi == monitor.ON:
         GPIO.output(GPIO_OUT_HI,GPIO.HIGH)
     else:
         GPIO.output(GPIO_OUT_HI,GPIO.LOW)
-    if f_low == ON:
+    if f_low == monitor.ON:
         GPIO.output(GPIO_OUT_LOW,GPIO.HIGH)
     else:
         GPIO.output(GPIO_OUT_LOW,GPIO.LOW)
-    if pump == ON:
+    if pump == monitor.ON:
         GPIO.output(GPIO_OUT_PUMP,GPIO.HIGH)
     else:
         GPIO.output(GPIO_OUT_PUMP,GPIO.LOW)
     
     #if any state change, log it... 
-    if (f_hi != start_monitoring.f_hi_state) or (f_low != start_monitoring.f_low_state) or \
-                                                (pump != start_monitoring.pump_state):
+    if (f_hi != monitor.f_hi_state) or (f_low != monitor.f_low_state) \
+                                    or (pump != monitor.pump_state):
         print("State change: {0}, {1}, {2}, {3}, {4}, {5}, {6}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S'), \
-                f_hi, f_low, pump, start_monitoring.f_hi_state, start_monitoring.f_low_state, start_monitoring.pump_state))
+                f_hi, f_low, pump, monitor.f_hi_state, monitor.f_low_state, monitor.pump_state))
         f_output.write("{0}, {1}, {2}, {3}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S'), f_hi, f_low, pump))
 
     #send notification if high float alarm or change in high float alarm
-    if f_hi == ON:
-        next_notification = dbg_send_notification(confdata, next_notification, False)
-    if f_hi == OFF and f_hi != start_monitoring.f_hi_state :
-        next_notification = dbg_send_notification(confdata, next_notification, True)
+    if f_hi == monitor.ON :
+        if monitor.next_notification == 0 :
+            monitor.next_notification = now + datetime.timedelta(minutes=int(confdata['notif_delay']))
+        if now > monitor.next_notification :
+            send_notification(confdata, monitor.ON)
+            monitor.pump_notification_sent = 1
+            monitor.next_notification = 0
+    if f_hi == monitor.OFF and f_hi != monitor.f_hi_state : #transition from hi float alarm off...
+        if monitor.pump_notification_sent == 1 :
+            send_notification(confdata, monitor.OFF)
+            monitor.pump_notification_sent = 0
+            monitor.next_notification = 0
     
     #track and log time pump is on
-    if (pump == ON) and (start_monitoring.pump_start_time == 0) :
-        #log pump on time
-        start_monitoring.pump_start_time = 1
-        print("State: ON, {}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
-        p_output.write("State: ON, {}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
-    if (pump == OFF) and (start_monitoring.pump_start_time == 1) :
-        #log pump off time
-        p_output.write("State: OFF, {}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
-        print("State: OFF, {}\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
-        start_monitoring.pump_start_time = 0
+    if (pump == monitor.ON) and (monitor.pump_state == monitor.OFF) :
+        #log pump just started
+        print("{}, State: ON\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
+        p_output.write("{}, State: ON\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
+    if (pump == monitor.OFF) and (monitor.pump_state == monitor.ON) :
+        #log pump stopped
+        p_output.write("{}, State: OFF\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
+        print("{}, State: OFF\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
+        monitor.pump_started = 0
         
 
     #set the current state so we can monitor for change going forward.
-    start_monitoring.f_hi_state = f_hi
-    start_monitoring.f_low_state = f_low
-    start_monitoring.pump_state = pump
+    monitor.f_hi_state = f_hi
+    monitor.f_low_state = f_low
+    monitor.pump_state = pump
     f_output.flush()
     p_output.flush()
-    return next_notification
+    return 
 
 ###############################################################################
 # function: do_every - nifty routine that uses a generator to track time.  
 #
-def do_every( func ):
+def do_every( func, monitor ):
     def g_tick(period):
         t = time.time()
         while True:
@@ -184,12 +178,6 @@ def do_every( func ):
     confdata = []
     with open('/opt/ollie/monitor/ollie_at_your_service.conf') as json_data_file:
         confdata = json.load(json_data_file)
-
-    #initialized last notification to start time. this means we won't send one 
-    #for at least an hour after starting. 
-    #next_notification = datetime.datetime.today()  
-    #lets fire an alarm if appropriate on startup...
-    next_notification = datetime.datetime.today() - datetime.timedelta(minutes=int(confdata['notif_delay']))
 
     g = g_tick(confdata['float_measurement_frequency'])
     day = datetime.datetime.now().strftime('%Y-%m-%d')
@@ -213,7 +201,7 @@ def do_every( func ):
     #endlessly retry and log our measurements... 
     while True:
         time.sleep(next(g))
-        next_notification = func(f_output, p_output, confdata, next_notification)
+        func(f_output, p_output, confdata, monitor)
         tmpday = datetime.datetime.now().strftime('%Y-%m-%d')
         if tmpday != day :
             #rotate our log file
@@ -240,6 +228,19 @@ def do_every( func ):
             p_output.write("Pump state changes\n----------------------------\n")
             p_output.flush()
 
+
+###############################################################################
+class MonitorData :
+    #optoisolator is NC (normally closed) returning (1) for off and (0) for on
+    #...a little backwards but if we use the definition and not the value, it works.
+    monitor.ON = 0
+    monitor.OFF = 1
+    #our static variables for state...
+    f_hi_state = monitor.OFF
+    f_low_state = monitor.OFF
+    pump_state = monitor.OFF
+    next_notification = 0
+    pump_notification_sent = 0
 
 ######################################
 #Main program starts here
@@ -276,14 +277,9 @@ print("  o NOTE: output can be found in {}".format(odir))
 GPIO_IN_1 = 17  #f_hi
 GPIO_IN_2 = 22  #f_low
 GPIO_IN_3 = 23  #pump
-#optoisolator is NC (normally closed) returning (1) for off and (0) for on
-ON = 0
-OFF = 1
-#our static variables for state...
-start_monitoring.f_hi_state = OFF
-start_monitoring.f_low_state = OFF
-start_monitoring.pump_state = OFF
-start_monitoring.pump_start_time = 0
+
+#declare the object that will track our state
+monitor = MonitorData()
 
 GPIO_OUT_HI = 21   #f_hi indicator
 GPIO_OUT_LOW = 20  #f_low indicator
@@ -313,7 +309,7 @@ time.sleep(0.5)
 # the user seeing lots of unnecessary error
 # messages.
 try:  
-    do_every( start_monitoring )
+    do_every( start_monitor, monitor )
 except KeyboardInterrupt:
     # User pressed CTRL-C
     # Reset GPIO settings
@@ -322,6 +318,3 @@ except KeyboardInterrupt:
 if os.path.isfile(pidfile) :
     os.remove(pidfile)
 print("Monitoring Terminated!")
-
-
-
