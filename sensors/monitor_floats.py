@@ -70,7 +70,7 @@ def move_to_GDrive( f1 ):
 
 ################################################################################
 # function: send_notification - will send a notification 
-DEBUG = True
+DEBUG = False
 if DEBUG :
   def send_notification( confdata, state ):
     print("Notification: last: %s, Alarm state: %d" % (monitor.next_notification, state))
@@ -108,7 +108,9 @@ def checkstate():
 def start_monitor(f_output, p_output, confdata, monitor):
     now = datetime.datetime.now()
     f_hi, f_low, pump = checkstate()
-        
+    if DEBUG :
+        print("STATES:  f_hi(%s), f_low(%s), pump(%s)" % (f_hi, f_low, pump))
+
     #set visual indicators
     if f_hi == monitor.ON:
         GPIO.output(GPIO_OUT_HI,GPIO.HIGH)
@@ -233,12 +235,12 @@ def do_every( func, monitor ):
 class MonitorData :
     #optoisolator is NC (normally closed) returning (1) for off and (0) for on
     #...a little backwards but if we use the definition and not the value, it works.
-    monitor.ON = 0
-    monitor.OFF = 1
+    ON = 0
+    OFF = 1
     #our static variables for state...
-    f_hi_state = monitor.OFF
-    f_low_state = monitor.OFF
-    pump_state = monitor.OFF
+    f_hi_state = OFF
+    f_low_state = OFF
+    pump_state = OFF
     next_notification = 0
     pump_notification_sent = 0
 
