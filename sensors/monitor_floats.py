@@ -149,12 +149,12 @@ def start_monitor(f_output, p_output, confdata, monitor):
     #track and log time pump is on
     if (pump == monitor.ON) and (monitor.pump_state == monitor.OFF) :
         #log pump just started
-        print("{}, State: ON\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
-        p_output.write("{}, State: ON\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
+        print("{} State: ON\n".format(now.strftime('%Y-%m-%d %a %H:%M:%S')))
+        p_output.write("{} State: ON\n".format(now.strftime('%Y-%m-%d %a %H:%M:%S')))
     if (pump == monitor.OFF) and (monitor.pump_state == monitor.ON) :
         #log pump stopped
-        p_output.write("{}, State: OFF\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
-        print("{}, State: OFF\n".format(now.strftime('%Y-%m-%d, %a, %H:%M:%S')))
+        p_output.write("{} State: OFF\n".format(now.strftime('%Y-%m-%d %a %H:%M:%S')))
+        print("{} State: OFF\n".format(now.strftime('%Y-%m-%d %a %H:%M:%S')))
         monitor.pump_started = 0
         
 
