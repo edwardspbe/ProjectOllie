@@ -70,7 +70,7 @@ def move_to_GDrive( f1 ):
 
 ################################################################################
 # function: send_notification - will send a notification 
-DEBUG = False
+DEBUG = True
 if DEBUG :
   def send_notification( confdata, state ):
     print("Notification: last: %s, Alarm state: %d" % (monitor.next_notification, state))
@@ -214,6 +214,7 @@ def do_every( func, monitor ):
             p_output.close()
 
             #make backup of current files...
+            os.system("sleep 1")
             os.system("cp {} {}/backup/floatlog.{}".format(ffilename, odir, day) )
             os.system("cp {} {}/backup/pumplog.{}".format(pfilename, odir, day) )
 
