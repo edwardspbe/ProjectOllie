@@ -1,16 +1,9 @@
-Notes on pump monitor program
 
-Script: monitor_depth.py
-Output: /opt/ollie/monitor/log/monitorlog.<date>
-Original implementation using ultrasonic sensor.  This solution measures the 
-current depth of the holding tank and sends notifications via txt message
-when things are alarmingly high and need investigation. Works great for a day
-or two and then humidity destroys sensor.
--   The first sensor monitors the depth of our pump tank feeding the peat moss pit.  Spiratic use means spikes in tank levels which can lead to some pretty smelly results so this tool is intended to help us understand when those spikes in activity are and how dramatic they can be so that we can improve the programming of our pumping system.  This is intended to run on a simple [Raspberri PI (zero) with ultrasonic sensor](https://tutorials-raspberrypi.com/raspberry-pi-ultrasonic-sensor-hc-sr04/) over the wifi in our park.
-- config file should be placed in /lib/systemd/system/... .service
--   The monitor_depth code and associated manager is intended to be run as a [systemd service](https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units). 
-
+Deployed Solution
+-----------------
 Script: monitor_floats.py
+Description: Tool used to track the flow of fluids into the EcoFlow BioFilter System for ECA related responsibilities.
+             Data is used in conjunction with the pump specifications to calculate flow volume.
 Output Filename: pumpstatus.csv.<date>
 Data collected by sensor to be moved to our Google Drive
 
@@ -26,10 +19,20 @@ Why are we collecting two types of data?
 ... we need to get notifications should things stop working or at the 
 ....... very least, if states stop changing.
 
-TODO: Another option would be to input and track the programmable timed 
-... dosage state changes.  When our sensor doesn't see the timing changes
-... expected, then a notification could be triggered.  We would still need
-... to track the state changes though so we understand how much we are 
-... pumping.
+Notes on pump monitor program
+-----------------------------
+Script: monitor_depth.py
+Description: 1st attempt at monitoring fluid flow of septic chamber.  Retired as could not sufficiently seal 
+            the ultrasonic sensor from moisture in the chamber.  Sensor would only last a few days before dying. :(
+Output: /opt/ollie/monitor/log/monitorlog.<date>
+Original implementation using ultrasonic sensor.  This solution measures the 
+current depth of the holding tank and sends notifications via txt message
+when things are alarmingly high and need investigation. Works great for a day
+or two and then humidity destroys sensor.
+-   The first sensor monitors the depth of our pump tank feeding the peat moss pit.  Spiratic use means spikes in tank levels which can lead to some pretty smelly results so this tool is intended to help us understand when those spikes in activity are and how dramatic they can be so that we can improve the programming of our pumping system.  This is intended to run on a simple [Raspberri PI (zero) with ultrasonic sensor](https://tutorials-raspberrypi.com/raspberry-pi-ultrasonic-sensor-hc-sr04/) over the wifi in our park.
+- config file should be placed in /lib/systemd/system/... .service
+-   The monitor_depth code and associated manager is intended to be run as a [systemd service](https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units). 
+
+
 
 
