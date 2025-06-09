@@ -1,13 +1,19 @@
 
 EcoFlow BioFilter Monitoring Solution
 -------------------------------------
-![Sensor](https://github.com/edwardspbe/ProjectOllie/sensor/blob/master/sensors/DeploymentBigPicture.jpg)
+This directory contains files associated with the Raspberry Pi project (ProjectOllie) that is used to monitor our septic pump feeding the EcoFlow BioFilter. The intent of this project is to try to understand/monitor the fluids being passed through the BioFilter over the course of the year while the park is open.
+
+![](https://github.com/edwardspbe/ProjectOllie/blob/master/sensors/DeploymentBigPicture.jpg)
+![](https://github.com/edwardspbe/ProjectOllie/blob/master/sensors/PiZeroAndOptoCouplerBoard.jpg)
+![](https://github.com/edwardspbe/ProjectOllie/blob/master/sensors/PumpCtrlWiring.jpg)
 
 Deployed Solution
 -----------------
 Script: monitor_floats.py
 Description: Tool used to track the flow of fluids into the EcoFlow BioFilter System for ECA related responsibilities.
-             Data is used in conjunction with the pump specifications to calculate flow volume.
+             This project leverages the use of a tri-input optocoupler circuit to monitor the state of the pump 
+             controller. Data is used in conjunction with the pump specifications to calculate flow volume into the 
+             EcoFlow BioFilter chamber.
 Output Filename: pumpstatus.csv.<date>
 Data collected by sensor to be moved to our Google Drive
 
