@@ -1,5 +1,6 @@
-Notes on pump monitor program
 
+Deployed Solution
+-----------------
 Script: monitor_floats.py
 Description: Tool used to track the flow of fluids into the EcoFlow BioFilter System for ECA related responsibilities.
              Data is used in conjunction with the pump specifications to calculate flow volume.
@@ -18,6 +19,8 @@ Why are we collecting two types of data?
 ... we need to get notifications should things stop working or at the 
 ....... very least, if states stop changing.
 
+Notes on pump monitor program
+-----------------------------
 Script: monitor_depth.py
 Description: 1st attempt at monitoring fluid flow of septic chamber.  Retired as could not sufficiently seal 
             the ultrasonic sensor from moisture in the chamber.  Sensor would only last a few days before dying. :(
