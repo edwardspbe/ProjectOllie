@@ -1,6 +1,8 @@
 
 EcoFlow BioFilter Monitoring Solution
-![Sensor](https://github.com/edwardspbe/ProjectOllie/sensor/DeploymentBigPicture.jpg)
+-------------------------------------
+![Sensor](https://github.com/edwardspbe/ProjectOllie/sensor/blob/master/sensors/DeploymentBigPicture.jpg)
+
 Deployed Solution
 -----------------
 Script: monitor_floats.py
