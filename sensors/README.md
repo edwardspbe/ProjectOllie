@@ -5,6 +5,8 @@ This folder contains files associated with the (ProjectOllie/sensor) Raspberry P
 
 This project involves using a Raspberry Pi Zero and a 3 channel Optocoupler Isolation Module used to sense 120V (AC) on a line.  By tapping into the EcoFlow BioFilter Control panel and monitoring when pump voltage is (high/on/120V) along with the low float and high float lines are (high/on/120V) we can better estimate the volume of affluent waste water entering the BioFilter chamber.
 
+The Optocoupler used was [Donker 3 Channel Photoelectric Isolated Module](https://www.amazon.ca/Channel-Optocoupler-Isolation-Isolated-Detection/dp/B081D1N443)
+
 ![](https://github.com/edwardspbe/ProjectOllie/blob/master/sensors/DeploymentBigPicture.jpg)
 ![](https://github.com/edwardspbe/ProjectOllie/blob/master/sensors/PiZeroAndOptoCouplerBoard.jpg)
 ![](https://github.com/edwardspbe/ProjectOllie/blob/master/sensors/PumpCtrlWiring.jpg)
