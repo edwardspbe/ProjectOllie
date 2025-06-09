@@ -1,7 +1,9 @@
 
 EcoFlow BioFilter Monitoring Solution
 -------------------------------------
-This directory contains files associated with the Raspberry Pi project (ProjectOllie) that is used to monitor our septic pump feeding the EcoFlow BioFilter. The intent of this project is to try to understand/monitor the fluids being passed through the BioFilter over the course of the year while the park is open.
+This folder contains files associated with the (ProjectOllie/sensor) Raspberry Pi project that is used to monitor our septic pump feeding the EcoFlow BioFilter. The intent of this project is to try to understand/monitor the fluids being passed through the BioFilter over the course of the year while the park is open.
+
+This project involves using a Raspberry Pi Zero and a 3 channel Optocoupler Isolation Module used to sense 120V (AC) on a line.  By tapping into the EcoFlow BioFilter Control panel and monitoring when pump voltage is (high/on/120V) along with the low float and high float lines are (high/on/120V) we can better estimate the volume of affluent waste water entering the BioFilter chamber.
 
 ![](https://github.com/edwardspbe/ProjectOllie/blob/master/sensors/DeploymentBigPicture.jpg)
 ![](https://github.com/edwardspbe/ProjectOllie/blob/master/sensors/PiZeroAndOptoCouplerBoard.jpg)
