@@ -224,6 +224,8 @@ def do_every( func, monitor ):
 
             #progress with 
             day = tmpday
+            ffilename = "{}/floatlog.{}".format(odir,day)
+            pfilename = "{}/pumplog.{}".format(odir,day)
             f_output = open(ffilename, 'w')
             f_output.write("Date, day, time, line, state(hi,lo,pump)\n----------------------------------------\n")
             f_output.flush()
