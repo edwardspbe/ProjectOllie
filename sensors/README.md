@@ -48,5 +48,15 @@ or two and then humidity destroys sensor.
 -   The monitor_depth code and associated manager is intended to be run as a [systemd service](https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units). 
 
 
+Notes on pump monitoring data log compilation for import to spreadsheet
+-----------------------------------------------------------------------
+Logs generally go to the cloud, but if you grab them from the sensor itself, there will be two directories...
+log/backup and log.  Some files under some (power failure, etc) conditions do not get copied properly and 
+end up as orphaned files. Grab both the orphaned and log/backup files and use the following tools to process
+them.
 
+1. catallpumplogs.sh  - script to concatenate all pumplog.<date> files into a single log and them
+                        execute the python script (2.)
 
+2. crunch_pump_times.py - script to parse all concatenated pumplogs and dump daily output criteria
+                          to be imported into the spreadsheet used to graph daily effluent volumes

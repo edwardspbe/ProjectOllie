@@ -28,7 +28,7 @@ def main():
     #... -7 seconds
     delay = 7   # 7 seconds based on delay pushing effluent uphill... 
 
-    dprint("Date, Day, Pump on-time, Seconds, US Gallons, Liters")
+    print("Date, Day, Pump on-time, Seconds, US Gallons, Liters")
     with open(sys.argv[1]) as infile:
         for line in infile :
             if line.startswith('202') :
@@ -41,8 +41,14 @@ def main():
                 #are we calculating on-time for a new day?
                 if current_date != "" and current_date != date1 :
                     volume = current_day_total * (flowrate/60)
-                    dprint("%s %s Pump on-time %d seconds %.2f total gallons" % \
-                            (current_date, current_day, current_day_total, volume))
+                    print("%s, %s, Pump on-time, %d, %.1f, %.1f" % \
+                            (current_date, current_day, current_day_total, volume, volume*g_to_l))
+                    current_day_total = 0
+
+                #TODO: figure out date roll-over...
+
+                #are we calculating on-tie for the first time or a change of date?
+                #then set up a current values
                 if current_date == 0 or current_date != date1 :
                     current_day = day1
                     current_date = date1
