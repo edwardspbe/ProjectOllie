@@ -38,12 +38,12 @@ def main():
   try:
     service = build("drive", "v3", credentials=creds)
 
-    file_metadata = {"name": "garage.png"}
+    file_metadata = {"name": "garage.png", "id": "garage.png"}
     media = MediaFileUpload("garage.png", mimetype="image/png")
     # pylint: disable=maybe-no-member
     file = (
         service.files()
-        .create(body=file_metadata, media_body=media, fields="id")
+        .create(body=file_metadata, media_body=media, fields="name")
         .execute()
     )
     print(f'File ID: {file.get("id")}')

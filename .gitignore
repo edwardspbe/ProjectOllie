@@ -9,3 +9,8 @@ sensors/credentials.json
 sensors/token.json
 sensors/google/token.json.readonly
 sensors/google/photo.jpg
+sensors/google/garage.png
+sensors/google/quickstart.py
+/sensors
+sensors/google/quickstart.py
+sensors/google/quickstart.py
